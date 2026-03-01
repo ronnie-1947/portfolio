@@ -2,6 +2,7 @@ import Image from "next/image";
 import GooeyButton from "./ui/btn-gooey";
 import TypewriterEffect from "./client/TypewriterEffect";
 import BgShapes1 from "./ui/bg-shapes-1";
+import WaveMask from "./ui/WaveMask";
 import { LINKEDIN_URL, GITHUB_URL } from "../config/portfolio";
 
 export default function HeroSection({
@@ -12,7 +13,7 @@ export default function HeroSection({
   return (
     <section
       id="about"
-      className="min-h-[100dvh] flex flex-col items-center justify-center px-6 pt-16 pb-32 sm:pt-20 sm:pb-28 md:pt-24 md:pb-20 relative"
+      className="min-h-dvh flex flex-col items-center justify-center px-6 pt-16 pb-32 sm:pt-20 sm:pb-28 md:pt-24 md:pb-20 relative"
     >
       {/* Background image */}
       <div
@@ -23,7 +24,7 @@ export default function HeroSection({
       <div className="absolute inset-0 bg-black/85" style={{ zIndex: 1 }} />
       <BgShapes1 />
 
-      <div className="relative mt-[-2rem] z-20 text-center space-y-3 sm:space-y-4 lg:space-y-6 animate-fade-in-up max-w-2xl mx-auto w-full">
+      <div className="relative mt-8 z-20 text-center space-y-3 sm:space-y-4 lg:space-y-6 animate-fade-in-up max-w-2xl mx-auto w-full">
         {/* Profile avatar with glowing border */}
         <div className="flex justify-center">
           <div className="avatar-glow-wrapper">
@@ -39,9 +40,9 @@ export default function HeroSection({
         </div>
 
         {/* Heading */}
-        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-tight cursor-default transition-transform duration-200 hover:[transform:skewX(-8deg)_scale(1.05)] inline-block">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-tight cursor-default transition-transform duration-200 hover:transform-[skewX(-8deg)_scale(1.05)] inline-block">
           Hi, I&apos;m{" "}
-          <span className="bg-gradient-to-br from-cyan-300 to-indigo-400 bg-clip-text text-transparent">
+          <span className="bg-linear-to-br from-cyan-300 to-indigo-400 bg-clip-text text-transparent">
             Ripunjoy
           </span>
         </h1>
@@ -92,29 +93,13 @@ export default function HeroSection({
       </div>
 
       {/* Scroll indicator */}
-      <div className="absolute bottom-[4rem] left-1/2 -translate-x-1/2 animate-bounce z-20">
+      <div className="absolute bottom-16 left-1/2 -translate-x-1/2 animate-bounce z-20">
         <div className="w-6 h-10 rounded-full border-2 border-gray-600 flex justify-center pt-2">
           <div className="w-1.5 h-1.5 bg-indigo-400 rounded-full" />
         </div>
       </div>
 
-      {/* Wave mask */}
-      <div
-        className="absolute bottom-0 left-0 right-0 z-10"
-        style={{ lineHeight: 0 }}
-      >
-        <svg
-          viewBox="0 0 1440 110"
-          xmlns="http://www.w3.org/2000/svg"
-          preserveAspectRatio="none"
-          className="block w-full h-[6.875rem]"
-        >
-          <path
-            fill="white"
-            d="M0,60 C360,110 720,5 1080,60 C1200,85 1340,35 1440,60 L1440,110 L0,110 Z"
-          />
-        </svg>
-      </div>
+      <WaveMask variant="dark-to-light" />
     </section>
   );
 }
