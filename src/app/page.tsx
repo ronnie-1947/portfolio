@@ -1,11 +1,13 @@
 import ExperienceSection from "./components/ExperienceSection";
 import Navbar from "./components/Navbar";
 import HeroSection from "./components/HeroSection";
+import EducationSection from "./components/EducationSection";
 import {
   PROFILE_IMAGE,
   experiences,
   skills,
-  education,
+  primaryEducation,
+  otherEducation,
   certifications,
 } from "./config/portfolio";
 import WaveMask from "./components/ui/WaveMask";
@@ -43,57 +45,11 @@ export default function Portfolio() {
       <SkillsSection skills={skills} />
 
       {/* Education & Certifications */}
-      <section className="py-32 px-6 relative bg-white z-10">
-        <div className="max-w-6xl mx-auto">
-          <div className="grid md:grid-cols-2 gap-16">
-            {/* Education */}
-            <div>
-              <p className="font-mono text-sm text-indigo-500 tracking-wider uppercase mb-2">
-                Academic Background
-              </p>
-              <h2 className="text-3xl font-bold mb-8 text-gray-900">
-                Education
-              </h2>
-              <div className="space-y-6">
-                {education.map((edu, i) => (
-                  <div key={i} className="light-card rounded-xl p-6">
-                    <p className="font-mono text-xs text-gray-400 mb-2">
-                      {edu.year}
-                    </p>
-                    <h3 className="font-semibold text-lg mb-1 text-gray-900">
-                      {edu.degree}
-                    </h3>
-                    <p className="text-indigo-600">{edu.school}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Certifications */}
-            <div>
-              <p className="font-mono text-sm text-indigo-500 tracking-wider uppercase mb-2">
-                Professional
-              </p>
-              <h2 className="text-3xl font-bold mb-8 text-gray-900">
-                Certifications
-              </h2>
-              <div className="space-y-4">
-                {certifications.map((cert, i) => (
-                  <div
-                    key={i}
-                    className="light-card rounded-xl p-6 flex justify-between items-center"
-                  >
-                    <h3 className="font-semibold text-gray-900">{cert.name}</h3>
-                    <span className="font-mono text-xs text-gray-400">
-                      {cert.period}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <EducationSection
+        primary={primaryEducation}
+        other={otherEducation}
+        certifications={certifications}
+      />
       {/* Contact Section */}
       <section id="contact" className="py-32 px-6 relative z-10">
         <div className="max-w-4xl mx-auto text-center">

@@ -119,12 +119,22 @@ export const skills = {
   AI: ["OpenAI API", "Claude API", "AI Agents"],
 };
 
-export const education = [
-  {
-    degree: "Master of Cybersecurity & Threat Intel",
-    school: "University of Guelph",
-    year: "2024",
-  },
+export const primaryEducation = {
+  university: "University of Guelph",
+  degree: "Master of Cybersecurity & Threat Intelligence",
+  year: "2023 – 2024",
+  location: "Guelph, Ontario, Canada",
+  logo: "/university/guelph-logo.png",
+  collageImages: [
+    { src: "/university/collage-1.png", alt: "Campus life" },
+    { src: "/university/collage-2.jpeg", alt: "Graduation" },
+    { src: "/university/collage-5.jpg", alt: "University event" },
+    { src: "/university/collage-3.jpeg", alt: "University campus" },
+    { src: "/university/collage-4.jpeg", alt: "Student life" },
+  ],
+};
+
+export const otherEducation = [
   {
     degree: "Cyber Security PG Certificate",
     school: "Durham College",
