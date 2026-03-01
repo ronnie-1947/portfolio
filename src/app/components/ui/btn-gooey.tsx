@@ -139,7 +139,13 @@ export default function GooweyButton({
         href={href}
         target={newTab ? "_blank" : undefined}
         rel={newTab ? "noopener noreferrer" : undefined}
-        onClick={onClick}
+        onClick={(e) => {
+          if (href.startsWith("#")) {
+            e.preventDefault();
+            document.getElementById(href.slice(1))?.scrollIntoView({ behavior: "smooth" });
+          }
+          onClick?.();
+        }}
         style={{ display: "inline-block", textDecoration: "none" }}
       >
         {svg}
