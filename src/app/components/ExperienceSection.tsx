@@ -1,5 +1,4 @@
 import ExperienceClient from "./client/ExperienceClient";
-import WaveMask from "./ui/WaveMask";
 
 export type Experience = {
   id: number;
@@ -18,8 +17,5 @@ export default function ExperienceSection({
   experiences: Experience[];
   theme?: "dark" | "light";
 }) {
-  return <>
-  <ExperienceClient experiences={experiences} theme={theme} />;
-  <WaveMask variant="light-to-dark" />
-  </>
+  return <ExperienceClient experiences={experiences} theme={theme} />;
 }

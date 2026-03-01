@@ -43,33 +43,51 @@ export default function ExperienceDetailsPanel({
   }, [mobileOpen]);
 
   const details = (
-    <>
-      <div className="mb-6">
+    <div key={selectedExp.id} className="detail-animate-in">
+      {/* Header */}
+      <div className="mb-6 2xl:mb-8">
         <p
-          className={`font-mono text-xs mb-2 ${isLight ? "text-indigo-600" : "text-indigo-400"}`}
+          className={`font-mono text-xs 2xl:text-sm mb-2 tracking-wide ${
+            isLight ? "text-indigo-600" : "text-indigo-400"
+          }`}
         >
           {selectedExp.period}
         </p>
         <h3
-          className={`text-2xl font-bold mb-1 ${isLight ? "text-gray-900" : ""}`}
+          className={`text-xl md:text-2xl 2xl:text-3xl font-bold mb-1 leading-tight ${
+            isLight ? "text-gray-900" : ""
+          }`}
         >
           {selectedExp.role}
         </h3>
-        <p className={isLight ? "text-gray-500" : "text-gray-400"}>
+        <p
+          className={`text-sm md:text-base 2xl:text-lg ${
+            isLight ? "text-gray-500" : "text-gray-400"
+          }`}
+        >
           {selectedExp.company} · {selectedExp.location}
         </p>
       </div>
 
-      <div className="space-y-3 mb-8">
+      {/* Details */}
+      <div className="space-y-3 2xl:space-y-4 mb-8 2xl:mb-10">
         {selectedExp.details.map((detail, i) => (
-          <div key={i} className="flex gap-3">
+          <div
+            key={i}
+            className="detail-item flex gap-3"
+            style={{ animationDelay: `${i * 0.08 + 0.1}s` }}
+          >
             <span
-              className={`mt-1.5 ${isLight ? "text-indigo-500" : "text-indigo-400"}`}
+              className={`mt-1 text-sm 2xl:text-base shrink-0 ${
+                isLight ? "text-indigo-500" : "text-indigo-400"
+              }`}
             >
               →
             </span>
             <p
-              className={`leading-relaxed ${isLight ? "text-gray-600" : "text-gray-300"}`}
+              className={`text-sm md:text-base 2xl:text-lg leading-relaxed ${
+                isLight ? "text-gray-600" : "text-gray-300"
+              }`}
             >
               {detail}
             </p>
@@ -77,28 +95,32 @@ export default function ExperienceDetailsPanel({
         ))}
       </div>
 
+      {/* Technologies */}
       <div>
         <p
-          className={`font-mono text-xs uppercase tracking-wider mb-3 ${isLight ? "text-gray-400" : "text-gray-500"}`}
+          className={`font-mono text-xs 2xl:text-sm uppercase tracking-wider mb-3 2xl:mb-4 ${
+            isLight ? "text-gray-400" : "text-gray-500"
+          }`}
         >
           Technologies
         </p>
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-2 2xl:gap-3">
           {selectedExp.skills.map((skill, i) => (
             <span
               key={i}
-              className={`skill-tag px-3 py-1.5 text-sm rounded-full ${
+              className={`skill-tag px-3 py-1.5 2xl:px-4 2xl:py-2 text-xs md:text-sm 2xl:text-base rounded-full cursor-default ${
                 isLight
                   ? "bg-indigo-50 border border-indigo-200 text-indigo-700"
                   : "bg-indigo-500/10 border border-indigo-500/20 text-indigo-300"
               }`}
+              style={{ animationDelay: `${i * 0.05 + 0.3}s` }}
             >
               {skill}
             </span>
           ))}
         </div>
       </div>
-    </>
+    </div>
   );
 
   const mobileOverlay = mobileOpen ? (
@@ -107,7 +129,7 @@ export default function ExperienceDetailsPanel({
         isLight ? "bg-white" : "bg-[#080c18]"
       }`}
     >
-      <div className="relative p-6 pt-16 min-h-full">
+      <div className="relative px-4 py-4 pt-14 min-h-full">
         <button
           onClick={onClose}
           aria-label="Close"
@@ -119,9 +141,7 @@ export default function ExperienceDetailsPanel({
         >
           ✕
         </button>
-        <div
-          className={'glass-card'}
-        >
+        <div className={isLight ? "light-card rounded-2xl p-4" : "glass-card rounded-2xl p-4"}>
           {details}
         </div>
       </div>
@@ -130,13 +150,14 @@ export default function ExperienceDetailsPanel({
 
   return (
     <>
-      {/* Mobile overlay — portaled to body to escape stacking contexts */}
       {mounted && createPortal(mobileOverlay, document.body)}
 
       {/* Desktop card */}
       <div
         key={selectedExp.id}
-        className={`hidden lg:block ${isLight ? "light-card" : "glass-card"} rounded-2xl p-8 animate-slide-in-right max-h-[calc(100vh-8rem)] overflow-y-auto`}
+        className={`hidden lg:block ${
+          isLight ? "light-card" : "glass-card"
+        } rounded-2xl p-8 2xl:p-10 animate-slide-in-right max-h-[calc(100vh-8rem)] overflow-y-auto`}
       >
         {details}
       </div>

@@ -31,6 +31,15 @@ const navItems = [
     ),
   },
   {
+    id: "education",
+    label: "Education",
+    icon: (
+      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665-.33m6.843 3.752A12.066 12.066 0 0112 21c-2.132 0-4.15-.523-6.003-1.434M12 14v7m0 0l3.16-1.623M12 21l-3.16-1.623" />
+      </svg>
+    ),
+  },
+  {
     id: "contact",
     label: "Contact",
     icon: (
@@ -53,23 +62,24 @@ export default function Navbar() {
   };
 
   useEffect(() => {
-    const sections = navItems
-      .map((item) => document.getElementById(item.id))
-      .filter(Boolean) as HTMLElement[];
+    const handleScroll = () => {
+      const sections = navItems
+        .map((item) => document.getElementById(item.id))
+        .filter(Boolean) as HTMLElement[];
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setActive(entry.target.id);
-          }
-        });
-      },
-      { rootMargin: "-40% 0px -55% 0px" }
-    );
+      const scrollY = window.scrollY + window.innerHeight * 0.4;
 
-    sections.forEach((section) => observer.observe(section));
-    return () => observer.disconnect();
+      for (let i = sections.length - 1; i >= 0; i--) {
+        if (sections[i].offsetTop <= scrollY) {
+          setActive(sections[i].id);
+          return;
+        }
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   return (
