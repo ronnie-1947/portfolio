@@ -37,6 +37,7 @@ export default function Portfolio() {
           </div>
           <ExperienceSection experiences={experiences} theme="light" />
         </div>
+        <WaveMask variant="light-to-dark" />
       </section>
 
       <SkillsSection skills={skills} />
