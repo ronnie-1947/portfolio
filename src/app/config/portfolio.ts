@@ -146,3 +146,100 @@ export const certifications = [
   { name: "CompTIA Security+ ce", period: "2022–2025" },
   { name: "CCNA", period: "2022–2025" },
 ];
+
+/* ─── Projects ───────────────────────────────────────────────────────────────
+ * All media is externally hosted:
+ *   - images  → Cloudinary delivery URLs (https://res.cloudinary.com/<cloud>/image/upload/...)
+ *   - videos  → YouTube, store the video ID only (the part after `v=` / `youtu.be/`)
+ *   - papers  → GitHub `blob/main/...pdf` or `raw.githubusercontent.com` URLs
+ * The Cloudinary URLs below point at Cloudinary's public `demo` cloud so layout can be
+ * verified before real assets exist. Replace every `TODO: replace` marker.
+ * ------------------------------------------------------------------------- */
+
+export type ProjectMedia =
+  | { type: "image"; src: string; alt: string }
+  | { type: "youtube"; videoId: string; title: string };
+
+export type ProjectLinks = {
+  live?: string; // running site
+  github?: string; // code reference (some projects are repo-only: github set, live omitted)
+  paper?: string; // external URL — GitHub blob URL or raw.githubusercontent.com
+};
+
+export type Project = {
+  id: string; // slug, e.g. "clinic-scribe"
+  title: string;
+  category: "Frontend" | "Backend" | "Full-Stack" | "Research";
+  tagline: string; // one-liner for the card
+  description: string[]; // paragraphs for the modal
+  cover: string; // card image (16:9) — full Cloudinary delivery URL
+  media: ProjectMedia[]; // carousel content (images + youtube mixed)
+  tech: string[]; // tag chips
+  links: ProjectLinks;
+  highlight?: string; // optional metric/badge
+};
+
+export const projects: Project[] = [
+  {
+    id: "clinic-scribe",
+    title: "AI Clinical Scribe",
+    category: "Full-Stack",
+    tagline:
+      "Ambient AI scribe demo that turns live clinical conversations into structured, reviewable notes.",
+    description: [
+      "A demonstration app for medical consultation recording and clinical note generation. It captures audio from a consultation, streams it to Deepgram for real-time speech-to-text, and uses an LLM to turn the resulting transcript into a structured clinical note the clinician can review before signing off.",
+      "Built with Next.js 14 (App Router) and NextAuth v5, supporting both credential and Google OAuth login. Consultations, transcripts and generated notes are persisted in PostgreSQL via Prisma, with a Redux Toolkit store managing session state on the client and a server-side API proxy keeping provider credentials off the browser.",
+      "Users bring their own OpenAI key through a settings screen, and the whole stack — Next.js app plus Postgres — ships as a Docker Compose setup for easy local spin-up.",
+    ],
+    cover:
+      "https://res.cloudinary.com/kolart/image/upload/v1785092977/ai_scribe-rec_jyajoz.png",
+    media: [
+      {
+        type: "image",
+        src: "https://res.cloudinary.com/kolart/image/upload/v1785092977/ai_scribe-rec_jyajoz.png",
+        alt: "Live consultation recording screen with real-time transcript",
+      },
+      {
+        type: "youtube",
+        videoId: "4-uFQcHCV30",
+        title: "Product demo — AI Clinical Scribe walkthrough",
+      },
+      {
+        type: "image",
+        src: "https://res.cloudinary.com/kolart/image/upload/v1785092976/ai_scribe-login_b3vzwy.png",
+        alt: "Login screen with credential and Google OAuth options",
+      },
+      {
+        type: "image",
+        src: "https://res.cloudinary.com/kolart/image/upload/v1785092976/ai_scribe-openai-settings_hyxsm3.png",
+        alt: "Settings screen for configuring a personal OpenAI API key",
+      },
+      {
+        type: "image",
+        src: "https://res.cloudinary.com/kolart/image/upload/v1785092974/ai_scribe-personal-settings_u7vtgh.png",
+        alt: "Personal account settings screen",
+      },
+      {
+        type: "image",
+        src: "https://res.cloudinary.com/kolart/image/upload/v1785092974/ai_scribe-finish_mdibik.png",
+        alt: "Finished consultation with generated structured clinical note",
+      },
+    ],
+    tech: [
+      "Next.js",
+      "NextAuth",
+      "Deepgram",
+      "OpenAI",
+      "PostgreSQL",
+      "Prisma",
+      "Redux Toolkit",
+      "Tailwind CSS",
+      "Docker",
+    ],
+    links: {
+      live: "https://ai-scribe-prototype.vercel.app",
+      github: "https://github.com/ronnie-1947/AI-scribe-prototype",
+    },
+    highlight: "Live demo available",
+  },
+];
