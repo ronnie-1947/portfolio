@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Streamlining Security: An In-Depth Analysis of SOAR Implementations</title>
+<style>
+  :root {
+    --ink: #1c2128;
+    --ink-soft: #4b5563;
+    --rule: #d8dde3;
+    --paper: #fbfaf7;
+    --accent: #1f4e5f;
+    --accent-soft: #e7eef0;
+    --serif: "Iowan Old Style", "Palatino Linotype", Georgia, "Times New Roman", serif;
+    --sans: "Inter", "Helvetica Neue", Arial, sans-serif;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--serif);
+  }
+
+  .page {
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 64px 28px 120px;
+  }
+
+  /* Masthead */
+  .masthead {
+    text-align: center;
+    padding-bottom: 32px;
+    border-bottom: 3px double var(--rule);
+    margin-bottom: 40px;
+  }
+
+  .kicker {
+    font-family: var(--sans);
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 18px;
+  }
+
+  h1.title {
+    font-size: clamp(28px, 4vw, 40px);
+    line-height: 1.15;
+    font-weight: 600;
+    margin: 0 0 28px;
+    letter-spacing: -0.01em;
+  }
+
+  .authors {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 36px;
+    font-family: var(--sans);
+    font-size: 13.5px;
+    color: var(--ink-soft);
+  }
+
+  .author strong {
+    display: block;
+    color: var(--ink);
+    font-size: 14.5px;
+    font-weight: 600;
+    margin-bottom: 2px;
+  }
+
+  .author span { display: block; }
+
+  /* Abstract */
+  .abstract {
+    background: var(--accent-soft);
+    border-left: 3px solid var(--accent);
+    padding: 22px 26px;
+    margin: 40px 0 44px;
+    font-size: 15px;
+    line-height: 1.7;
+  }
+
+  .abstract .label {
+    font-family: var(--sans);
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 10px;
+    display: block;
+  }
+
+  .index-terms {
+    font-family: var(--sans);
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    margin: 18px 0 44px;
+  }
+
+  .index-terms b {
+    font-style: normal;
+    color: var(--ink);
+    font-weight: 600;
+  }
+
+  /* Body typography */
+  article {
+    font-size: 16.5px;
+    line-height: 1.75;
+  }
+
+  h2 {
+    font-family: var(--sans);
+    font-size: 13px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--accent);
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 10px;
+    margin: 56px 0 22px;
+  }
+
+  h2 .num {
+    display: inline-block;
+    margin-right: 10px;
+    color: var(--ink-soft);
+    font-weight: 700;
+  }
+
+  h3 {
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 600;
+    font-size: 18px;
+    color: var(--ink);
+    margin: 34px 0 14px;
+  }
+
+  p { margin: 0 0 18px; }
+
+  .lead::first-letter {
+    font-size: 3.1em;
+    line-height: 0.85;
+    float: left;
+    padding: 4px 8px 0 0;
+    font-weight: 600;
+    color: var(--accent);
+  }
+
+  a { color: var(--accent); }
+
+  /* Terminology list */
+  .terms {
+    list-style: none;
+    margin: 0 0 20px;
+    padding: 0;
+    counter-reset: term;
+  }
+
+  .terms li {
+    counter-increment: term;
+    margin-bottom: 18px;
+    padding-left: 42px;
+    position: relative;
+  }
+
+  .terms li::before {
+    content: counter(term);
+    position: absolute;
+    left: 0;
+    top: 2px;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: #fff;
+    font-family: var(--sans);
+    font-size: 12px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .terms b { font-family: var(--sans); font-weight: 700; }
+
+  /* Figures */
+  figure {
+    margin: 30px 0;
+    padding: 0;
+  }
+
+  .figure-box {
+    background: #fff;
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    padding: 28px;
+    text-align: center;
+    color: var(--ink-soft);
+    font-family: var(--sans);
+    font-size: 13px;
+  }
+
+  .figure-box .ph-icon {
+    font-size: 26px;
+    display: block;
+    margin-bottom: 10px;
+    opacity: 0.55;
+  }
+
+  figcaption {
+    font-family: var(--sans);
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    text-align: center;
+    margin-top: 10px;
+  }
+
+  figcaption b { color: var(--ink); }
+
+  /* Bar chart placeholders (lightweight, data-driven) */
+  .bar-chart {
+    display: flex;
+    align-items: flex-end;
+    gap: 14px;
+    height: 160px;
+    padding: 0 10px;
+  }
+
+  .bar-chart .bar-col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    height: 100%;
+  }
+
+  .bar-chart .bar {
+    width: 100%;
+    max-width: 44px;
+    background: var(--accent);
+    border-radius: 3px 3px 0 0;
+    position: relative;
+  }
+
+  .bar-chart .bar .val {
+    position: absolute;
+    top: -20px;
+    left: 0;
+    right: 0;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--ink);
+  }
+
+  .bar-chart .bar-label {
+    margin-top: 8px;
+    font-size: 10.5px;
+    color: var(--ink-soft);
+    text-align: center;
+    max-width: 70px;
+  }
+
+  /* Tables */
+  .table-wrap {
+    overflow-x: auto;
+    margin: 24px 0;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--sans);
+    font-size: 13px;
+  }
+
+  caption {
+    caption-side: top;
+    text-align: left;
+    font-weight: 700;
+    font-size: 12.5px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 10px;
+  }
+
+  th, td {
+    border: 1px solid var(--rule);
+    padding: 9px 12px;
+    text-align: center;
+  }
+
+  th {
+    background: var(--accent-soft);
+    font-weight: 700;
+    color: var(--ink);
+  }
+
+  td:first-child, th:first-child {
+    text-align: left;
+    font-weight: 600;
+  }
+
+  /* Workflow diagram */
+  .flow {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    justify-content: center;
+    margin: 18px 0;
+  }
+
+  .flow .step {
+    background: #fff;
+    border: 1.5px solid var(--accent);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 11.5px;
+    font-weight: 600;
+    text-align: center;
+    padding: 10px 12px;
+    border-radius: 6px;
+    min-width: 90px;
+  }
+
+  .flow .arrow {
+    color: var(--accent);
+    font-size: 16px;
+  }
+
+  .flow.soar .step.auto {
+    background: var(--accent);
+    color: #fff;
+  }
+
+  /* Playbook use-case list */
+  .usecase {
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    padding: 22px 26px;
+    margin: 22px 0;
+    background: #fff;
+  }
+
+  .usecase h3 { margin-top: 0; }
+
+  /* Blockquote / callout for lessons */
+  .callout {
+    background: #fff;
+    border: 1px dashed var(--rule);
+    border-radius: 6px;
+    padding: 16px 20px;
+    font-size: 14.5px;
+    color: var(--ink-soft);
+    margin: 20px 0;
+  }
+
+  /* Acknowledgment */
+  .ack {
+    font-size: 14px;
+    color: var(--ink-soft);
+    font-style: italic;
+    border-top: 1px solid var(--rule);
+    padding-top: 20px;
+    margin-top: 56px;
+  }
+
+  /* References */
+  .references {
+    font-family: var(--sans);
+    font-size: 13px;
+    line-height: 1.65;
+    color: var(--ink-soft);
+  }
+
+  .references ol {
+    padding-left: 22px;
+  }
+
+  .references li {
+    margin-bottom: 12px;
+  }
+
+  .references li::marker {
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  /* Footer */
+  .footer-note {
+    text-align: center;
+    font-family: var(--sans);
+    font-size: 11.5px;
+    color: var(--ink-soft);
+    margin-top: 60px;
+  }
+
+  @media (max-width: 600px) {
+    .page { padding: 40px 18px 80px; }
+    article { font-size: 15.5px; }
+  }
+</style>
+</head>
+<body>
+  <div class="page">
+
+    <header class="masthead">
+      <div class="kicker">Research Paper &middot; Cybersecurity &amp; Threat Intelligence</div>
+      <h1 class="title">Streamlining Security: An In-Depth Analysis of SOAR Implementations</h1>
+      <div class="authors">
+        <div class="author">
+          <strong>Shivam Baikerikar</strong>
+          <span>University of Guelph, Canada</span>
+          <span>sbaikeri@uoguelph.ca</span>
+        </div>
+        <div class="author">
+          <strong>Ripunjoy Buddha</strong>
+          <span>University of Guelph, Canada</span>
+          <span>rbuddha@uoguelph.ca</span>
+        </div>
+        <div class="author">
+          <strong>Fatemeh Khodaparast</strong>
+          <span>University of Guelph, Canada</span>
+          <span>khodapaf@uoguelph.ca</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="abstract">
+      <span class="label">Abstract</span>
+      This research examines Security Orchestration, Automation, and Response (SOAR) as an approach to managing cybersecurity incidents, and its integration within modern security operations. Human analysts increasingly struggle with alert volume, alert fatigue, threat complexity, time pressure, tool overload, and limited resources &mdash; challenges that SOAR platforms are designed to address by automating and orchestrating incident response. Drawing on academic literature, industry reports, and case studies, the paper provides a comprehensive overview of how SOAR streamlines processes, reduces response times, and strengthens organizational cybersecurity posture, while outlining its capabilities and current limitations.
+    </div>
+
+    <div class="index-terms"><b>Index Terms —</b> SOAR, SIEM, SOC, incident response, security automation, orchestration, threat intelligence</div>
+
+    <article>
+
+      <!-- I. INTRODUCTION -->
+      <h2><span class="num">I.</span> Introduction</h2>
+      <p class="lead">Organizations today face a massive challenge in managing the growing number of security alerts. The capabilities of human security analysts are being pushed to their limits by the increasing complexity of cyberattacks. Security Operation Centers (SOCs) are responsible for protecting sensitive data and digital assets within an organization. However, they frequently receive an excessive amount of alerts from different security tools. The resulting alert fatigue, inefficiency, and potential gaps in incident response have raised critical concerns in the cybersecurity domain. Security Orchestration, Automation, and Response, or SOAR, has become an effective strategy to address these issues [1].</p>
+
+      <p>Cybersecurity incidents and breaches can lead to severe outcomes, including financial losses and harm to reputation. As a result, businesses have made big investments in security solutions like firewalls, intrusion detection systems (IDS), antivirus software, and other threat intelligence tools. These tools generate a constant stream of alerts, indicating potential security incidents. Although the goal of using these technologies is to improve security, security professionals may become alert fatigued and respond to incidents too slowly or not at all due to the high frequency of alerts [2].</p>
+
+      <p>Human security analysts have a tough job going through security alerts one by one to figure out if they're real and how serious they are. Doing this manually takes a lot of time, can have mistakes, and uses up a lot of resources. As cyber threats get smarter, there's a growing need for a better system to manage these alerts quickly and effectively.</p>
+
+      <p>Dealing with too many alerts and managing them manually is a big problem for organizations. Businesses are looking for smart solutions to boost their cybersecurity posture, and that's where SOAR technology comes in. It helps by automating tasks, sorting alerts, and providing more information on incidents, making human security analysts better at spotting and dealing with security threats. This research project is all about understanding how SOAR technology has evolved, its benefits, and how it changes the job of human analysts in today's security operations &mdash; particularly how SOAR tools can help solve the problem of handling too many alerts.</p>
+
+      <!-- II. TERMINOLOGIES -->
+      <h2><span class="num">II.</span> Terminologies</h2>
+      <ul class="terms">
+        <li><b>SOC (Security Operations Center)</b> &mdash; A combination of people, processes, and technology that monitors an enterprise IT infrastructure 24/7 to detect and address cybersecurity events in real time. A team of security professionals scans the network around the clock to flag abnormalities or suspicious activity.</li>
+        <li><b>SIEM (Security Information and Event Management)</b> &mdash; Software that combines security information management (SIM) and security event management (SEM) to provide real-time analysis of security alerts generated by applications and network hardware.</li>
+        <li><b>Phishing</b> &mdash; A social engineering attack where malicious emails, texts, or instant messages deceive a victim into disclosing private information or downloading malware, often to steal credentials or financial data.</li>
+        <li><b>Correlation rules</b> &mdash; Techniques (pattern recognition, rule-based logic, alerting) used in SIEM to link related records and flag suspicious patterns &mdash; for example, flagging simultaneous logins from different geographic locations as "impossible travel."</li>
+        <li><b>VPN (Virtual Private Network)</b> &mdash; An encrypted connection over the internet between a device and a network, protecting sensitive data from eavesdropping and enabling secure remote work.</li>
+      </ul>
+
+      <!-- III. LITERATURE SURVEY -->
+      <h2><span class="num">III.</span> Literature Survey</h2>
+      <p>This literature survey examines how organizations currently respond to incidents, the integration of security tools, real-world case studies of successful implementations, and the importance of user experience in shaping effective cybersecurity practices.</p>
+
+      <p>Twenty-four participants evaluated six commercial SOAR products in one study, with investigative work totaling more than 200 hours. The findings highlight that streamlining the process of gathering and correlating data is crucial to improving cybersecurity posture; switching between multiple tools for data collection is time-consuming, distracting, and often delays reaction to issues [3]. Centralizing data from various sources onto a single platform was found to reduce context switching and increase efficiency, though it may also affect ticketing accuracy.</p>
+
+      <p>Due to the gap between OT and IT, digitizing SCADA systems presents security challenges, with critical sectors often relying on outdated tools. Researchers propose SOAR platforms &mdash; leveraging machine learning and AI &mdash; as an ideal solution for resolving security flaws and performance interruptions, helping protect smart grid SCADA systems from emerging threats [4].</p>
+
+      <p>Other work provides a detailed implementation strategy for deploying SIEM solutions, emphasizing that corporations need a clear goal (reporting, compliance, or threat management) for a SIEM deployment to succeed. The same deliberate approach is recommended when deploying SOAR solutions [5].</p>
+
+      <p>A recent survey found that roughly three-quarters of surveyed firms are testing AI/ML for cybersecurity, underscoring the crucial role of ML and AI in developing SOAR systems that automate threat detection and response and support both offensive and defensive SOC capabilities [1].</p>
+
+      <p>Additional proposed systems integrate honeypots (e.g., T-Pot), Suricata for network threat detection, ELK for log parsing and visualization, and Spiderfoot for threat intelligence gathering, combined with an AI agent that determines true versus false positives and generates supporting reports and playbooks [6][7]. For Distributed Energy Resource (DER) systems, a technique called SOAR4DER combines cyber and physical data via a BITW device to detect and respond to attacks &mdash; including man-in-the-middle assaults, brute-force logins, malicious Modbus commands, and denial-of-service attacks &mdash; within seconds [8].</p>
+
+      <p>A Palo Alto Networks survey of North American security professionals found that many incident response teams remain small, as shown below, leaving them exposed to high stress and full responsibility for handling security incidents [1].</p>
+
+      <figure>
+        <div class="figure-box">
+          <div class="bar-chart">
+            <div class="bar-col"><div class="bar" style="height:93%"><span class="val">28%</span></div><div class="bar-label">1&ndash;3</div></div>
+            <div class="bar-col"><div class="bar" style="height:93%"><span class="val">28%</span></div><div class="bar-label">4&ndash;5</div></div>
+            <div class="bar-col"><div class="bar" style="height:77%"><span class="val">23%</span></div><div class="bar-label">6&ndash;10</div></div>
+            <div class="bar-col"><div class="bar" style="height:40%"><span class="val">12%</span></div><div class="bar-label">11&ndash;25</div></div>
+            <div class="bar-col"><div class="bar" style="height:27%"><span class="val">8%</span></div><div class="bar-label">26+</div></div>
+          </div>
+        </div>
+        <figcaption><b>Fig. 1.</b> Count of team members handling incident response, by response rate.</figcaption>
+      </figure>
+
+      <!-- IV. EXISTING SYSTEM -->
+      <h2><span class="num">IV.</span> Existing System</h2>
+      <h3>A. Where does SOAR fit in?</h3>
+      <p>In a typical SOC workflow, numerous tools generate huge quantities of logs, processed through a SIEM system. In a large organization these logs originate from sources like Active Directory, firewalls, endpoints, antivirus, web access firewalls, DNS/DHCP servers, web servers, IPS/IDS, routers, switches, and email servers. Correlation rules in the SIEM trigger roughly 80&ndash;120 alerts per day. Security analysts then analyze these alerts, and confirmed incidents are escalated to incident handlers for response.</p>
+
+      <figure>
+        <div class="figure-box" style="text-align:left;">
+          <div style="font-family:var(--sans); font-weight:700; font-size:12px; color:var(--ink); margin-bottom:14px; text-align:center;">Typical SOC Workflow</div>
+          <div class="flow">
+            <div class="step">Thousands of Log Sources</div><span class="arrow">&rarr;</span>
+            <div class="step">Millions of Logs</div><span class="arrow">&rarr;</span>
+            <div class="step">Processed in SIEM</div><span class="arrow">&rarr;</span>
+            <div class="step">Runs 100s of Correlation Rules</div><span class="arrow">&rarr;</span>
+            <div class="step">Triggers Few 100 Alerts</div><span class="arrow">&rarr;</span>
+            <div class="step">Analysis by Security Analysts</div><span class="arrow">&rarr;</span>
+            <div class="step">Incident Response Handlers</div>
+          </div>
+          <div style="font-family:var(--sans); font-weight:700; font-size:12px; color:var(--ink); margin:22px 0 14px; text-align:center;">Typical SOC Workflow with SOAR</div>
+          <div class="flow soar">
+            <div class="step">Thousands of Log Sources</div><span class="arrow">&rarr;</span>
+            <div class="step">Millions of Logs</div><span class="arrow">&rarr;</span>
+            <div class="step">Processed in SIEM</div><span class="arrow">&rarr;</span>
+            <div class="step">Runs 100s of Correlation Rules</div><span class="arrow">&rarr;</span>
+            <div class="step">Triggers Few 100 Alerts</div><span class="arrow">&rarr;</span>
+            <div class="step auto">SOAR</div><span class="arrow">&rarr;</span>
+            <div class="step">Analysis + Response (streamlined)</div>
+          </div>
+        </div>
+        <figcaption><b>Fig. 2.</b> SOC workflow, without and with SOAR handling the bulk of alert processing.</figcaption>
+      </figure>
+
+      <p>In the SOC workflow with SOAR, the process remains largely the same, but SOAR handles the bulk of the workload. Analysis by security analysts and response by handlers are still essential, but the technology streamlines and automates many tasks. While the number of required security analysts may decrease, human involvement remains crucial [1]. SOAR's role begins with processing alerts and concludes with executing incident response actions &mdash; enhancing efficiency and reducing the workload on human analysts.</p>
+
+      <!-- V. CURRENT SCENARIO -->
+      <h2><span class="num">V.</span> Current Scenario of Threat Feed Management</h2>
+      <p>In threat management, a significant 50% of analysts still handle threat feeds manually, while the other half use various tools (Fig. 3). The risk associated with manual handling is high given the nature of modern threats: small teams may face overload, leading to mishandled alerts. False positives waste time and resources, while false negatives can result in security breaches. Automating this critical workflow is essential to improving efficiency and reducing errors.</p>
+
+      <figure>
+        <div class="figure-box">
+          <div class="bar-chart" style="height:180px;">
+            <div class="bar-col"><div class="bar" style="height:100%"><span class="val">50%</span></div><div class="bar-label">Manual</div></div>
+            <div class="bar-col"><div class="bar" style="height:38%"><span class="val">19%</span></div><div class="bar-label">ThreatConnect</div></div>
+            <div class="bar-col"><div class="bar" style="height:22%"><span class="val">11%</span></div><div class="bar-label">MISP</div></div>
+            <div class="bar-col"><div class="bar" style="height:14%"><span class="val">7%</span></div><div class="bar-label">Anomali</div></div>
+            <div class="bar-col"><div class="bar" style="height:14%"><span class="val">7%</span></div><div class="bar-label">ThreatQuotient</div></div>
+            <div class="bar-col"><div class="bar" style="height:14%"><span class="val">7%</span></div><div class="bar-label">Others</div></div>
+          </div>
+        </div>
+        <figcaption><b>Fig. 3.</b> Threat feed management approaches by response rate.</figcaption>
+      </figure>
+
+      <!-- VI. WHAT CAN BE AUTOMATED -->
+      <h2><span class="num">VI.</span> What Can Be Automated?</h2>
+
+      <h3>A. Assignment of alerts to analyst</h3>
+      <p>Alert assignment in a SOC can be significantly streamlined through automation. SOC teams typically operate with just one or two analysts per shift, often using a round-robin approach. Machine learning can replace this rotational model by analyzing historical data &mdash; assigning new alerts to the analyst who previously handled a related host or incident, acknowledging potential connections between incidents and optimizing analyst expertise.</p>
+
+      <h3>B. Information gathering</h3>
+      <p>This phase focuses on extracting key details from triggered alerts &mdash; for a malware alert, this includes host name, IP address, the affected user, the malware's name, and the action taken by antivirus software (deletion, quarantine, cleaning). Automating this extraction ensures all important details are gathered consistently, creating a solid base for further analysis.</p>
+
+      <h3>C. Enrichment of information</h3>
+      <p>Enrichment gathers additional context beyond what's in the original log or alert &mdash; connecting to Active Directory for a user's department, role, manager, and location; to vulnerability assessment reports for machine health; and to threat intelligence services for the reputation of IPs, URLs, and files. Automating enrichment produces a more comprehensive, targeted analysis.</p>
+
+      <h3>D. Analysis</h3>
+      <p>Automatable analysis tasks include retrieving a file from an end-user machine and submitting it to a sandbox, checking an IP's historical communication within the network (informed by earlier reputation findings), and reviewing whether other users received email from the same phishing sender by comparing subject lines and sender details.</p>
+
+      <h3>E. User interaction</h3>
+      <p>Automation extends to user communication &mdash; acknowledging a reported suspicious email, then following up with the analysis outcome. It also covers seeking approval from higher-ups, such as sending a manager a request with "Yes/No" options to delete identified phishing emails, streamlining the permission-seeking process while keeping a human in the loop for the final decision.</p>
+
+      <h3>F. Respond</h3>
+      <p>Automated response actions include generating tickets for tracking, triggering vulnerability or antivirus scans on suspect systems, and blocking malicious applications, IPs, or URLs on the firewall or web gateway &mdash; eliminating the need to manually raise tickets or wait on administrators to update policies.</p>
+
+      <h3>G. Enhancement / lessons learned</h3>
+      <p>Automation supports continuous improvement: automatically adding a newly detected malware hash to the local threat intelligence database, and checking for its presence across the network. It also extends to organizational awareness &mdash; for example, automatically alerting the organization when a new targeted phishing technique tied to a recent company event is identified.</p>
+
+      <figure>
+        <div class="figure-box">
+          <div class="bar-chart" style="height:180px;">
+            <div class="bar-col"><div class="bar" style="height:100%"><span class="val">74%</span></div><div class="bar-label">Phishing</div></div>
+            <div class="bar-col"><div class="bar" style="height:76%"><span class="val">56%</span></div><div class="bar-label">Malware</div></div>
+            <div class="bar-col"><div class="bar" style="height:72%"><span class="val">53%</span></div><div class="bar-label">Endpoint Security</div></div>
+            <div class="bar-col"><div class="bar" style="height:54%"><span class="val">40%</span></div><div class="bar-label">Network Security</div></div>
+            <div class="bar-col"><div class="bar" style="height:23%"><span class="val">17%</span></div><div class="bar-label">IAM</div></div>
+            <div class="bar-col"><div class="bar" style="height:22%"><span class="val">16%</span></div><div class="bar-label">VPN</div></div>
+            <div class="bar-col"><div class="bar" style="height:22%"><span class="val">16%</span></div><div class="bar-label">SIEM</div></div>
+            <div class="bar-col"><div class="bar" style="height:19%"><span class="val">14%</span></div><div class="bar-label">Cloud Service Provider</div></div>
+            <div class="bar-col"><div class="bar" style="height:16%"><span class="val">12%</span></div><div class="bar-label">Threat Intel Feed</div></div>
+            <div class="bar-col"><div class="bar" style="height:3%"><span class="val">1%</span></div><div class="bar-label">Others</div></div>
+          </div>
+        </div>
+        <figcaption><b>Fig. 5.</b> Types of alerts security teams face, by response rate.</figcaption>
+      </figure>
+
+      <!-- VII. PLAYBOOK USE CASES -->
+      <h2><span class="num">VII.</span> SOAR Playbook Use-Cases</h2>
+      <p>According to the data above, the top three incidents security teams face are phishing alerts (74%), malware alerts (56%), and endpoint security alerts (53%). Network security incidents stand at 40%. The remaining 15&ndash;17% consist of anomalous logins, VPN issues, SIEM alerts, and cloud service provider alerts. Addressing these primary threats is crucial for protecting an organization against security breaches.</p>
+
+      <div class="usecase">
+        <h3>A. Detonating a URL using VirusTotal</h3>
+        <p>The playbook starts with an incident created in the SOAR platform representing a security event that needs investigation. Relevant information &mdash; such as the suspicious URL to detonate &mdash; is gathered and stored in the incident context for use throughout the playbook. A VirusTotal integration enriches the incident with the URL's reputation, associated domains, IPs, and other indicators of compromise. Conditional logic based on the reputation score determines whether to proceed with detonation &mdash; executing the URL in a controlled environment to observe its behavior. Results are monitored and retrieved from the VirusTotal API, and a report is generated. Depending on findings, response actions may include blocking the URL, isolating affected systems, or notifying stakeholders before the incident is closed.</p>
+      </div>
+
+      <div class="usecase">
+        <h3>B. Malware investigation and response</h3>
+        <p>This playbook is triggered by a malware alert and starts an SLA timer to ensure timely response. It assesses whether an analyst needs assignment, then sets tags based on the incoming alert. Once the expected SIEM alert arrives, the playbook retrieves detailed incident data and marks the SIEM state as processed to avoid redundant work. Analysts select an investigation tool &mdash; Microsoft Defender for Endpoint, CrowdStrike Falcon, or Palo Alto XDR &mdash; to extract and analyze investigation details. Sub-playbooks then carry out malware remediation and hunt for detonation activity elsewhere in the company.</p>
+      </div>
+
+      <div class="usecase">
+        <h3>C. Phishing</h3>
+        <p>A phishing playbook begins with an instant notification to the management chain, followed by a thorough initial inspection of the reported email &mdash; checking for malicious URLs, attachments, suspicious sender names or addresses, and hostname legitimacy. If the email is not phishing, the case closes as a false positive. If confirmed, severity is assessed and analysts are assigned for a deeper Investigation Step 2: extracting URLs and hostnames, fetching linked files, and running malicious hash inspections. Investigation Step 3 checks whether the incident is part of a broader campaign. In the response phase, actions can include notifying the internal PR team (if a campaign), blocking the email on the server, updating spam filters, informing the email security vendor, removing the email from inboxes, blackholing the phishing domain, blocking the download URL, and reporting malware samples to antivirus systems.</p>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <caption>Table I &mdash; Resolution percentages for different types of alerts, by time to resolution</caption>
+          <thead>
+            <tr><th>Type of Alert</th><th>30&ndash;60 min</th><th>1&ndash;4 hrs</th><th>5&ndash;8 hrs</th><th>1&ndash;2 days</th><th>2+ days</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Phishing</td><td>40%</td><td>29%</td><td>15%</td><td>5%</td><td>2%</td></tr>
+            <tr><td>Malware</td><td>21%</td><td>42%</td><td>15%</td><td>8%</td><td>2%</td></tr>
+            <tr><td>Endpoint</td><td>21%</td><td>42%</td><td>15%</td><td>8%</td><td>2%</td></tr>
+            <tr><td>Cloud Service Provider</td><td>16%</td><td>35%</td><td>21%</td><td>7%</td><td>2%</td></tr>
+            <tr><td>Remote Access / VPN</td><td>25%</td><td>31%</td><td>17%</td><td>12%</td><td>1%</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout">
+        The paper title functions as the primary text head, since all subsequent material relates back to it; second-level heads (uppercase Roman numerals) are used for major sections, and sub-heads are introduced only where a section has two or more sub-topics.
+      </div>
+
+    </article>
+
+    <div class="ack">
+      <b>Acknowledgment.</b> The authors thank their collaborators and institution for supporting this research into SOAR implementations and their role in modern security operations.
+    </div>
+
+    <h2 style="margin-top:56px;">References</h2>
+    <div class="references">
+      <ol>
+        <li>J. Kinyua and L. Awuah, "AI/ML in security orchestration, automation and response: Future research directions," <i>Intelligent Automation &amp; Soft Computing</i>, vol. 28, no. 2, 2021.</li>
+        <li>V.-G. Bilali, D. Kosyvas, T. Theodoropoulos, E. Ouzounoglou, L. Karagiannidis, and A. Amditis, "Iris advanced threat intelligence orchestrator &mdash; a way to manage cybersecurity challenges of IoT ecosystems in smart cities," in <i>Global IoT Summit</i>. Springer, 2022, pp. 315&ndash;325.</li>
+        <li>R. A. Bridges, A. E. Rice, S. Oesch, J. A. Nichols, C. Watson, K. Spakes, S. Norem, M. Huettel, B. Jewell, B. Weber <i>et al.</i>, "Testing SOAR tools in use," <i>Computers &amp; Security</i>, vol. 129, p. 103201, 2023.</li>
+        <li>A. W. Mir and R. K. Ramachandran, "Implementation of security orchestration, automation and response (SOAR) in smart grid-based SCADA systems," in <i>Sixth International Conference on Intelligent Computing and Applications: Proceedings of ICICA 2020</i>. Springer, 2021, pp. 157&ndash;169.</li>
+        <li>M. Rosenberg, B. Schneider, C. Scherb, and P. M. Asprion, "An adaptable approach for successful SIEM adoption in companies," <i>arXiv preprint arXiv:2308.01065</i>, 2023.</li>
+        <li>R. Vast, S. Sawant, A. Thorbole, and V. Badgujar, "Artificial intelligence based security orchestration, automation and response system," in <i>2021 6th International Conference for Convergence in Technology (I2CT)</i>. IEEE, 2021, pp. 1&ndash;5.</li>
+        <li>U. Bartwal, S. Mukhopadhyay, R. Negi, and S. Shukla, "Security orchestration, automation, and response engine for deployment of behavioural honeypots," in <i>2022 IEEE Conference on Dependable and Secure Computing (DSC)</i>. IEEE, 2022, pp. 1&ndash;8.</li>
+        <li>J. Johnson, C. B. Jones, A. Chavez, and S. Hossain-McKenzie, "SOAR4DER: security orchestration, automation, and response for distributed energy resources," in <i>Power Systems Cybersecurity: Methods, Concepts, and Best Practices</i>. Springer, 2023, pp. 387&ndash;411.</li>
+        <li>D. Lalos, "Analysis on security orchestration automation and response (SOAR) platforms for security operation centers," Ph.D. dissertation, University of Piraeus (Greece), 2022.</li>
+        <li>K. Fysarakis, A. Lekidis, V. Mavroeidis, K. Lampropoulos, G. Lyberopoulos, I. G.-M. Vidal, J. C. T. i Casals, E. R. Luna, A. A. M. Sancho, A. Mavrelos <i>et al.</i>, "Phoeni2X &mdash; a European cyber resilience framework with artificial-intelligence-assisted orchestration, automation &amp; response capabilities for business continuity and recovery, incident response, and information exchange," in <i>2023 IEEE International Conference on Cyber Security and Resilience (CSR)</i>. IEEE, 2023, pp. 538&ndash;545.</li>
+      </ol>
+    </div>
+
+    <div class="footer-note">University of Guelph &middot; Cybersecurity and Threat Intelligence</div>
+
+  </div>
+</body>
+</html>

@@ -195,14 +195,14 @@ export const projects: Project[] = [
       "https://res.cloudinary.com/kolart/image/upload/v1785092977/ai_scribe-rec_jyajoz.png",
     media: [
       {
-        type: "image",
-        src: "https://res.cloudinary.com/kolart/image/upload/v1785092977/ai_scribe-rec_jyajoz.png",
-        alt: "Live consultation recording screen with real-time transcript",
-      },
-      {
         type: "youtube",
         videoId: "4-uFQcHCV30",
         title: "Product demo — AI Clinical Scribe walkthrough",
+      },
+      {
+        type: "image",
+        src: "https://res.cloudinary.com/kolart/image/upload/v1785092977/ai_scribe-rec_jyajoz.png",
+        alt: "Live consultation recording screen with real-time transcript",
       },
       {
         type: "image",
@@ -241,5 +241,335 @@ export const projects: Project[] = [
       github: "https://github.com/ronnie-1947/AI-scribe-prototype",
     },
     highlight: "Live demo available",
+  },
+  {
+    id: "spotify-clone",
+    title: "Spotify Clone",
+    category: "Full-Stack",
+    tagline:
+      "A Spotify Clone built with React that logs in with a real Spotify account and pulls in the user's own playlists.",
+    description: [
+      "A Spotify Clone built with React and Next.js that authenticates against a real Spotify account. Once logged in, it automatically pulls the user's own playlists straight from their Spotify library instead of relying on mock data.",
+      "It also supports searching Spotify's catalog for favorite artists and bands, surfacing results the same way the official client would.",
+      "The frontend is built with React and styled with Sass, backed by a Node.js server that exposes a RESTful API layer for talking to the Spotify Web API. The app is deployed on Vercel.",
+    ],
+    cover:
+      "https://res.cloudinary.com/kolart/image/upload/v1784670530/portfolio/spotify_1_y4c7r3.png",
+    media: [
+      {
+        type: "youtube",
+        videoId: "Jq8ueH-fwnU",
+        title: "Product demo — Spotify Clone walkthrough",
+      },
+      {
+        type: "image",
+        src: "https://res.cloudinary.com/kolart/image/upload/v1784670530/portfolio/spotify_1_y4c7r3.png",
+        alt: "Spotify Clone main view showing the logged-in user's playlists",
+      },
+      {
+        type: "image",
+        src: "https://res.cloudinary.com/kolart/image/upload/v1784670530/portfolio/spotify_3_eudfly.png",
+        alt: "Spotify Clone search results for an artist",
+      },
+      {
+        type: "image",
+        src: "https://res.cloudinary.com/kolart/image/upload/v1784670531/portfolio/spotify_4_ud1xmt.jpg",
+        alt: "Spotify Clone playlist detail view",
+      },
+    ],
+    tech: ["React", "Next.js", "Node.js", "RESTful API", "JavaScript", "Sass"],
+    links: {
+      live: "https://spotify-clone-hyuql1cmq-ronnie-1947.vercel.app",
+      github: "https://github.com/ronnie-1947/spotify-clone",
+    },
+    highlight: "Live demo available",
+  },
+  {
+    id: "tvguestpert",
+    title: "TVGuestpert",
+    category: "Full-Stack",
+    tagline:
+      "Full-stack platform where TV guest experts showcase media appearances, sell their books, and manage paid memberships — live in production.",
+    description: [
+      "TVGuestpert is a production web application built around TV guest experts — authors, entrepreneurs and specialists who appear on network segments. The homepage showcases a guest's recent media placement alongside sign-up paths for producers/bookers and for new guest experts joining the platform.",
+      "The platform bundles several product surfaces into one app: an e-commerce shop where guest experts sell their books directly (with per-title pricing and an Amazon buy link), a blogging system, portfolio pages, and monthly/yearly paid memberships. A CMS lets users and admins track payments, edit profiles, and update UI content, while session-limited login protects accounts.",
+      "The backend is built on Node.js and Express with MongoDB for storage, exposed through a RESTful API, and styled with Sass on the frontend. Admin access sits behind a dedicated Identity and Access Management system for authorization, and the app is deployed on a Linux server behind NGINX.",
+    ],
+    cover:
+      "https://res.cloudinary.com/kolart/image/upload/v1784670545/portfolio/tvg_main_ulkrfr.jpg",
+    media: [
+      {
+        type: "image",
+        src: "https://res.cloudinary.com/kolart/image/upload/v1784670545/portfolio/tvg_main_ulkrfr.jpg",
+        alt: "TVGuestpert homepage highlighting a guest expert's TV news segment appearance",
+      },
+      {
+        type: "youtube",
+        videoId: "vuPrMAGYu2c",
+        title: "Product demo — TVGuestpert walkthrough",
+      },
+      {
+        type: "image",
+        src: "https://res.cloudinary.com/kolart/image/upload/v1784670530/portfolio/tvg_book_pvos25.png",
+        alt: "Guest expert's book listing page in the platform's e-commerce shop",
+      },
+      {
+        type: "image",
+        src: "https://res.cloudinary.com/kolart/image/upload/v1784670558/portfolio/tvg_login_nfwm6t.png",
+        alt: "Login screen with a session-timeout security notice",
+      },
+      {
+        type: "image",
+        src: "https://res.cloudinary.com/kolart/image/upload/v1784670544/portfolio/tvg_shop_gucyjx.png",
+        alt: "E-commerce product page for a guest expert's book with price and Buy on Amazon button",
+      },
+    ],
+    tech: [
+      "Node.js",
+      "Express",
+      "MongoDB",
+      "RESTful API",
+      "Sass",
+      "JavaScript",
+      "HTML",
+      "NGINX",
+      "Linux",
+      "Git",
+    ],
+    links: {
+      live: "https://www.tvguestpert.com",
+    },
+    highlight: "In production",
+  },
+  {
+    id: "happy-haul",
+    title: "HappyHaul",
+    category: "Frontend",
+    tagline:
+      "Marketing site for an Ottawa moving company, built to load instantly and convert visitors into booked jobs.",
+    description: [
+      "HappyHaul is the public-facing site for a small moving and hauling business in Ottawa, currently live in production. It presents services, service areas and a clear path to get a quote, built to feel fast and trustworthy on any device.",
+      "The site is a Next.js app rendered with static site generation, so every page is pre-built and served instantly with no server round-trip on request. Tailwind CSS handles styling and Redux manages shared UI state across the booking/quote flow.",
+    ],
+    cover:
+      "https://res.cloudinary.com/kolart/image/upload/v1785093162/happy-haul-1_utluvd.png",
+    media: [
+      {
+        type: "image",
+        src: "https://res.cloudinary.com/kolart/image/upload/v1785093162/happy-haul-1_utluvd.png",
+        alt: "HappyHaul homepage hero section",
+      },
+      {
+        type: "image",
+        src: "https://res.cloudinary.com/kolart/image/upload/v1785093153/happy-haul-2_cr8wi5.png",
+        alt: "HappyHaul services overview section",
+      },
+      {
+        type: "image",
+        src: "https://res.cloudinary.com/kolart/image/upload/v1785093162/happy-haul-3_yebber.png",
+        alt: "HappyHaul page showing service details",
+      },
+      {
+        type: "image",
+        src: "https://res.cloudinary.com/kolart/image/upload/v1785093161/happy-haul-4_mjt9cp.png",
+        alt: "HappyHaul contact / quote request section",
+      },
+    ],
+    tech: ["Next.js", "SSG", "Tailwind CSS", "Redux", "TypeScript"],
+    links: {
+      live: "https://www.happyhaul.ca",
+    },
+    highlight: "In production",
+  },
+  {
+    id: "netflix-clone",
+    title: "Netflix Clone",
+    category: "Frontend",
+    tagline:
+      "A pixel-for-pixel Netflix UI clone that pulls live trending titles from TMDB and plays their YouTube trailers inline.",
+    description: [
+      "This project recreates the look and feel of Netflix's browse experience — the hero banner, genre rows like Netflix Originals, Trending Now and Comedy Movies, and hover-driven browsing — but backs it with real data instead of static mockups. Movie listings come from the TMDB API, so the rows stay current with whatever's actually trending.",
+      "Selecting a title resolves its trailer on YouTube via the `movie-trailer` package and plays it inline with `react-youtube`, so browsing feels closer to the real product than a static gallery would. The frontend is built with Next.js, React and TypeScript, Axios handles the TMDB requests, and Sass handles styling.",
+      "It's a small, self-contained demo built to demonstrate front-end UI/UX skills — matching Netflix's layout and interaction details closely rather than building out account or streaming functionality.",
+    ],
+    cover:
+      "https://res.cloudinary.com/kolart/image/upload/v1784670505/portfolio/Netflix_main_jtummx.png",
+    media: [
+      {
+        type: "image",
+        src: "https://res.cloudinary.com/kolart/image/upload/v1784670505/portfolio/Netflix_main_jtummx.png",
+        alt: "Netflix Clone hero banner for a featured title with Play and My List buttons above the Netflix Originals row",
+      },
+      {
+        type: "youtube",
+        videoId: "Tv1x5UjoyGk",
+        title: "Product demo — Netflix Clone walkthrough",
+      },
+      {
+        type: "image",
+        src: "https://res.cloudinary.com/kolart/image/upload/v1784670505/portfolio/Netflix_1_tuzaua.png",
+        alt: "Netflix Clone browse view showing the Netflix Originals and Trending Now title rows",
+      },
+      {
+        type: "image",
+        src: "https://res.cloudinary.com/kolart/image/upload/v1784670505/portfolio/Netflix_2_kp8mek.png",
+        alt: "Netflix Clone with an inline YouTube trailer playing above the Comedy Movies row",
+      },
+    ],
+    tech: [
+      "Next.js",
+      "React",
+      "TypeScript",
+      "Axios",
+      "TMDB API",
+      "react-youtube",
+      "Sass",
+    ],
+    links: {
+      live: "https://netflix-clone-eight-lime.vercel.app/",
+      github: "https://github.com/ronnie-1947/netflix_clone",
+    },
+    highlight: "Live demo available",
+  },
+  {
+    id: "pinterest-clone",
+    title: "Pinterest Clone",
+    category: "Full-Stack",
+    tagline:
+      "A Pinterest-style photo discovery app with a responsive masonry grid, keyword search, and a full-screen pin viewer.",
+    description: [
+      "A Pinterest-style photo viewer that recreates the core browsing experience of Pinterest: a responsive masonry grid of photo cards on the home feed, a search bar for finding pins by keyword (searching \"trip\", for example, surfaces a grid of travel photography), and a full-screen lightbox that opens a selected pin over the dimmed grid behind it.",
+      "The frontend is built with React and styled with Sass to get the staggered, variable-height card layout right, backed by a Node.js server that exposes a RESTful API for fetching and searching photo data.",
+      "The app is deployed on Netlify as a live prototype focused on getting the masonry layout and browsing interactions right.",
+    ],
+    cover:
+      "https://res.cloudinary.com/kolart/image/upload/v1784671482/portfolio/pintrest_1_yin1ca.png",
+    media: [
+      {
+        type: "image",
+        src: "https://res.cloudinary.com/kolart/image/upload/v1784671482/portfolio/pintrest_1_yin1ca.png",
+        alt: "Pinterest Clone home feed showing a responsive masonry grid of photo pins",
+      },
+      {
+        type: "youtube",
+        videoId: "9029CyPL1z0",
+        title: "Product demo — Pinterest Clone walkthrough",
+      },
+      {
+        type: "image",
+        src: "https://res.cloudinary.com/kolart/image/upload/v1784671480/portfolio/pinterest_2_zqgrhd.png",
+        alt: "Pinterest Clone full-screen pin viewer showing a photo of a person holding a red smoke flare, overlaid on the dimmed grid behind it",
+      },
+      {
+        type: "image",
+        src: "https://res.cloudinary.com/kolart/image/upload/v1784671481/portfolio/pinterest_3_ruggqi.png",
+        alt: "Pinterest Clone search results for \"trip\" showing a masonry grid of travel photography",
+      },
+    ],
+    tech: ["React", "JavaScript", "Node.js", "RESTful API", "Sass", "Git"],
+    links: {
+      live: "https://ripunjoypintrestprototype.netlify.app",
+      github: "https://github.com/ronnie-1947/pinterest-clone",
+    },
+    highlight: "Live demo available",
+  },
+  {
+    id: "blockchain-iam",
+    title: "Decentralized IAM & Passwordless Auth",
+    category: "Research",
+    tagline:
+      "A blockchain-based identity system where users log in without passwords — proving wallet ownership by decrypting a cryptographic challenge — and grant or revoke access to their own encrypted data.",
+    description: [
+      "A University of Guelph research project (with Shivam Baikerikar) that reimagines identity and access management without a central authority. Instead of storing everyone's identity data in one breach-prone repository, each user controls their own identity through a blockchain wallet, and a Public Key Infrastructure (PKI) replaces passwords entirely. The accompanying paper motivates the design, surveys prior blockchain-IAM work, and walks through the authentication and data-sharing protocols.",
+      "The system is built from four cooperating apps: a user wallet app, a third-party relying-party app (the University of Guelph, in the demo), a Node.js/Express backend that acts as the communication hub over REST and a WebSocket relay, and an Ethereum smart contract deployed to a local Ganache chain via Truffle. Signing up derives a wallet address, private key and public key from a mnemonic phrase; only the address-to-public-key mapping lives on-chain (User.sol), while sensitive PII is encrypted client-side with AES and kept in the backend's off-chain vault — never leaving the browser in plaintext.",
+      "Two protocols carry the whole experience. Passwordless login is a challenge-response: the relying party fetches the user's public key, encrypts a one-time code with it (RSA-OAEP), and relays it to the wallet, which decrypts it with the private key to prove ownership — no password ever stored or sent. Data sharing is consent-driven: every request names a purpose and expiry, the user is prompted to accept or revoke, and data is only ever decrypted with the user's own key. It's an educational prototype meant to run locally against Ganache, demonstrating the architecture rather than shipping as a hardened product.",
+    ],
+    cover:
+      "https://res.cloudinary.com/kolart/image/upload/v1785103243/portfolio/blockchain-iam-architecture_sxovty.png",
+    media: [
+      {
+        type: "image",
+        src: "https://res.cloudinary.com/kolart/image/upload/v1785103243/portfolio/blockchain-iam-architecture_sxovty.png",
+        alt: "System architecture: user wallet app and third-party app connected through a Node/Express backend hub to an Ethereum smart contract on Ganache",
+      },
+      {
+        type: "image",
+        src: "https://res.cloudinary.com/kolart/image/upload/v1785103242/portfolio/blockchain-iam-login-flow_ab3hfw.png",
+        alt: "Passwordless login flow: third-party encrypts a one-time code with the user's public key, the wallet decrypts it with the private key to authenticate",
+      },
+      {
+        type: "image",
+        src: "https://res.cloudinary.com/kolart/image/upload/v1785103243/portfolio/blockchain-iam-consent-flow_k8s73y.png",
+        alt: "Consent-driven data-sharing flow: request with purpose and expiry, user accept/revoke prompt, and AES-GCM client-side encryption of sensitive fields",
+      },
+    ],
+    tech: [
+      "Solidity",
+      "Truffle",
+      "Ganache",
+      "Web3.js",
+      "Ethereum",
+      "Node.js",
+      "Express",
+      "WebSocket",
+      "React",
+      "RSA-OAEP",
+      "AES-GCM",
+      "PKI",
+    ],
+    links: {
+      github: "https://github.com/ronnie-1947/blockchain-auth-iam",
+      paper:
+        "https://github.com/ronnie-1947/blockchain-auth-iam/blob/main/public/blockchain-iam-paper.pdf",
+    },
+    highlight: "Educational demo",
+  },
+  {
+    id: "soar-analysis",
+    title: "Streamlining Security: An Analysis of SOAR Implementations",
+    category: "Research",
+    tagline:
+      "A research paper on how Security Orchestration, Automation, and Response (SOAR) platforms cut alert fatigue and speed up incident response in modern SOCs.",
+    description: [
+      "A University of Guelph research paper (co-authored with Shivam Baikerikar and Fatemeh Khodaparast) examining Security Orchestration, Automation, and Response (SOAR) as an approach to managing cybersecurity incidents. It frames the core problem facing modern Security Operations Centers — analysts drowning in alerts from firewalls, IDS/IPS, endpoint, email, and threat-intel tools — and the alert fatigue, delayed response, and missed incidents that follow.",
+      "Drawing on academic literature, industry surveys, and case studies, the paper maps where SOAR fits into the SIEM-driven SOC workflow and breaks down what can actually be automated across the incident lifecycle: alert assignment, information gathering, enrichment, analysis, user interaction, response, and lessons-learned. It walks through concrete playbook use-cases — detonating a suspicious URL via VirusTotal, malware investigation and response, and phishing triage — and reports resolution times and the alert types teams face most (phishing 74%, malware 56%, endpoint 53%).",
+      "The full paper is presented as a self-contained, readable web version rather than a PDF, so it can be read directly in the browser on any device.",
+    ],
+    cover:
+      "https://res.cloudinary.com/kolart/image/upload/v1785106805/SOAR-1_zslp3u.png",
+    media: [
+      {
+        type: "image",
+        src: "https://res.cloudinary.com/kolart/image/upload/v1785106805/SOAR-1_zslp3u.png",
+        alt: "Infographic — the challenge: multiple security tools flooding analysts with alerts, causing alert fatigue, time pressure, and delayed response",
+      },
+      {
+        type: "image",
+        src: "https://res.cloudinary.com/kolart/image/upload/v1785106802/SOAR-2_noiisp.png",
+        alt: "Infographic — the SOAR platform taking in data sources and orchestrating, automating, and responding to produce prioritized alerts and enriched context",
+      },
+      {
+        type: "image",
+        src: "https://res.cloudinary.com/kolart/image/upload/v1785106804/SOAR-3_r1rlrj.png",
+        alt: "Infographic — the SOAR workflow from alert to resolution across detect, analyze & enrich, triage & decide, respond, and learn & improve, with common playbooks",
+      },
+      {
+        type: "image",
+        src: "https://res.cloudinary.com/kolart/image/upload/v1785106801/SOAR-4_r8refp.png",
+        alt: "Infographic — impact of SOAR on security operations alongside a bar chart of common alerts faced by teams, led by phishing at 74%",
+      },
+    ],
+    tech: [
+      "SOAR",
+      "SIEM",
+      "SOC",
+      "Incident Response",
+      "Security Automation",
+      "Threat Intelligence",
+    ],
+    links: {
+      paper: "/projects/soar-paper.html",
+    },
+    highlight: "Web-readable paper",
   },
 ];
