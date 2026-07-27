@@ -1,6 +1,6 @@
-import Link from "next/link";
 import type { Project } from "../config/portfolio";
 import FeaturedProjectsClient from "./client/FeaturedProjectsClient";
+import GooeyButton from "./ui/btn-gooey";
 import WaveMask from "./ui/WaveMask";
 
 /**
@@ -55,20 +55,13 @@ export default function FeaturedProjectsSection({
             </p>
           </div>
 
-          <Link
+          <GooeyButton
             href="/projects"
-            className="group inline-flex w-full sm:w-auto items-center justify-center gap-2 px-5 py-2.5 rounded-full text-sm md:text-base font-medium bg-gray-900 text-white shadow-lg shadow-gray-900/20 transition-all duration-300 hover:bg-indigo-600 hover:shadow-indigo-500/40 hover:-translate-y-0.5"
-          >
-            View all projects
-            <svg
-              className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-            </svg>
-          </Link>
+            label="All projects ->"
+            fontSize={30}
+            width="clamp(12rem, 38vw, 14rem)"
+            animate
+          />
         </div>
 
         <FeaturedProjectsClient projects={projects} />
