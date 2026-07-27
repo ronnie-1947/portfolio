@@ -190,6 +190,22 @@ body {
     0 0 0.25rem rgba(6, 182, 212, 0.15);
 }
 
+/* ─── Featured projects carousel ─────────────────────────────────────────── */
+
+@keyframes progressGrow {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+
+/* Autoplay countdown bar — duration/play-state come from the component. */
+.autoplay-bar {
+  transform-origin: left;
+  animation: progressGrow linear forwards;
+}
+
+.no-scrollbar { scrollbar-width: none; -ms-overflow-style: none; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
+
 /* ─── Photo collage grid ─────────────────────────────────────────────────── */
 
 .photo-collage {

@@ -6,7 +6,9 @@ import { useState, useEffect } from "react";
 
 const PROJECTS_PATH = "/projects";
 
-// Same-page sections on `/` — these drive the scroll-spy.
+// Sections on `/`, in page order — these drive the scroll-spy.
+// `projects` is both a home section (teaser) and its own route, so on `/` it
+// scrolls to the teaser and elsewhere it links to the full /projects page.
 const sectionItems = [
   {
     id: "about",
@@ -23,6 +25,15 @@ const sectionItems = [
     icon: (
       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+      </svg>
+    ),
+  },
+  {
+    id: "projects",
+    label: "Projects",
+    icon: (
+      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V7z" />
       </svg>
     ),
   },
@@ -54,19 +65,6 @@ const sectionItems = [
     ),
   },
 ];
-
-// The Projects item is a route, not a section — inserted after Skills.
-const projectsItem = {
-  id: "projects",
-  label: "Projects",
-  icon: (
-    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V7z" />
-    </svg>
-  ),
-};
-
-const PROJECTS_INDEX = sectionItems.findIndex((item) => item.id === "skills") + 1;
 
 const linkClass = (isActive: boolean) =>
   `w-10 h-10 flex items-center justify-center rounded-full transition-all duration-300 ${
@@ -112,34 +110,38 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [isHome]);
 
-  const renderItems = () => {
-    const nodes = sectionItems.map((item) => (
-      <a
-        key={item.id}
-        href={isHome ? `#${item.id}` : `/#${item.id}`}
-        onClick={isHome ? handleSmoothScroll : undefined}
-        title={item.label}
-        className={linkClass(isHome && active === item.id)}
-      >
-        {item.icon}
-      </a>
-    ));
+  const isProjectsRoute = pathname === PROJECTS_PATH;
 
-    nodes.splice(
-      PROJECTS_INDEX,
-      0,
-      <Link
-        key={projectsItem.id}
-        href={PROJECTS_PATH}
-        title={projectsItem.label}
-        className={linkClass(!isHome && pathname === PROJECTS_PATH)}
-      >
-        {projectsItem.icon}
-      </Link>,
-    );
+  const renderItems = () =>
+    sectionItems.map((item) => {
+      // Off the home page, Projects points at the full project listing.
+      if (item.id === "projects" && !isHome) {
+        return (
+          <Link
+            key={item.id}
+            href={PROJECTS_PATH}
+            title={item.label}
+            aria-label={item.label}
+            className={linkClass(isProjectsRoute)}
+          >
+            {item.icon}
+          </Link>
+        );
+      }
 
-    return nodes;
-  };
+      return (
+        <a
+          key={item.id}
+          href={isHome ? `#${item.id}` : `/#${item.id}`}
+          onClick={isHome ? handleSmoothScroll : undefined}
+          title={item.label}
+          aria-label={item.label}
+          className={linkClass(isHome && active === item.id)}
+        >
+          {item.icon}
+        </a>
+      );
+    });
 
   return (
     <>

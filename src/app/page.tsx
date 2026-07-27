@@ -10,9 +10,13 @@ import {
   primaryEducation,
   otherEducation,
   certifications,
+  projects,
 } from "./config/portfolio";
-import WaveMask from "./components/ui/WaveMask";
 import SkillsSection from "./components/SkillsSection";
+import FeaturedProjectsSection from "./components/FeaturedProjectsSection";
+
+// Home only teases the top projects; the rest live on /projects.
+const FEATURED_PROJECT_COUNT = 4;
 
 export default function Portfolio() {
   return (
@@ -30,7 +34,7 @@ export default function Portfolio() {
       {/* Experience Section */}
       <section
         id="experience"
-        className="bg-white min-h-screen relative py-14 md:py-20 2xl:py-28 px-6 md:px-10 2xl:px-16 z-10"
+        className="bg-white min-h-screen relative pt-14 md:pt-20 2xl:pt-28 pb-8 md:pb-12 px-6 md:px-10 2xl:px-16 z-10"
       >
         <div className="max-w-7xl 2xl:max-w-360 mx-auto">
           <div className="mb-12 md:mb-16 2xl:mb-20 animate-fade-in-up">
@@ -43,8 +47,13 @@ export default function Portfolio() {
           </div>
           <ExperienceSection experiences={experiences} theme="light" />
         </div>
-        <WaveMask variant="light-to-dark" />
       </section>
+
+      {/* Projects teaser — same white block as Experience, wave into Skills */}
+      <FeaturedProjectsSection
+        projects={projects.slice(0, FEATURED_PROJECT_COUNT)}
+        totalCount={projects.length}
+      />
 
       <SkillsSection skills={skills} />
 
