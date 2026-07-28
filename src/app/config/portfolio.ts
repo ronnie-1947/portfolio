@@ -519,8 +519,7 @@ export const projects: Project[] = [
     ],
     links: {
       github: "https://github.com/ronnie-1947/blockchain-auth-iam",
-      paper:
-        "https://github.com/ronnie-1947/blockchain-auth-iam/blob/main/public/blockchain-iam-paper.pdf",
+      paper: "/projects/blockchain-iam.html",
     },
     highlight: "Educational demo",
   },

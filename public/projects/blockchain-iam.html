@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Decentralized Identity &amp; Passwordless Authentication — Interactive Report</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;450;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#FFFFFF;
+  --bg-soft:#F6F8F9;
+  --bg-panel:#FBFCFC;
+  --ink:#0F1A20;
+  --ink-soft:#465257;
+  --ink-faint:#7C8A8E;
+  --line:#E3E8EA;
+  --line-strong:#CDD6D9;
+  --indigo:#2B4B8C;
+  --indigo-soft:#E7EDF7;
+  --teal:#0E7C6B;
+  --teal-soft:#DCF0EC;
+  --amber:#B4791E;
+  --amber-soft:#FBEED4;
+  --rose:#B23B4A;
+  --rose-soft:#FBE4E6;
+  --violet:#6B3FA0;
+  --violet-soft:#EEE6F6;
+  --radius:10px;
+  --mono:'JetBrains Mono',ui-monospace,monospace;
+  --display:'Space Grotesk',system-ui,sans-serif;
+  --sans:'Inter',system-ui,sans-serif;
+  --shadow:0 12px 30px -18px rgba(15,26,32,.28);
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  margin:0; background:var(--bg); color:var(--ink);
+  font-family:var(--sans); line-height:1.65; -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--indigo); color:#fff;}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.001ms!important;transition-duration:.001ms!important;}}
+a{color:var(--indigo);}
+.wrap{max-width:1120px; margin:0 auto; padding:0 30px;}
+
+/* progress bar */
+#progress{position:fixed; top:0; left:0; height:3px; width:0; background:linear-gradient(90deg,var(--indigo),var(--teal)); z-index:100; transition:width .1s linear;}
+
+/* nav */
+nav.top{position:sticky; top:0; z-index:60; background:rgba(255,255,255,.9); backdrop-filter:blur(10px); border-bottom:1px solid var(--line);}
+nav.top .wrap{display:flex; align-items:center; justify-content:space-between; gap:18px; padding:13px 30px;}
+.brand{font-family:var(--mono); font-weight:700; font-size:13px; display:flex; align-items:center; gap:9px; white-space:nowrap;}
+.brand .mark{width:22px; height:22px; border-radius:6px; background:linear-gradient(135deg,var(--indigo),var(--teal)); display:inline-block; position:relative;}
+.brand .mark::after{content:''; position:absolute; inset:6px; border-radius:2px; background:#fff; opacity:.85;}
+.navlinks{display:flex; gap:2px; overflow-x:auto; scrollbar-width:none;}
+.navlinks::-webkit-scrollbar{display:none;}
+.navlinks a{font-family:var(--mono); font-size:11px; text-transform:uppercase; letter-spacing:.05em; color:var(--ink-soft); text-decoration:none; padding:7px 10px; border-radius:6px; white-space:nowrap; transition:.15s;}
+.navlinks a:hover{color:var(--indigo); background:var(--indigo-soft);}
+
+/* hero */
+header.hero{position:relative; overflow:hidden; padding:96px 0 70px; border-bottom:1px solid var(--line);}
+.hero-grid{position:absolute; inset:0; z-index:0; opacity:.6; background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px); background-size:46px 46px; mask-image:radial-gradient(ellipse 80% 70% at 50% 30%,#000,transparent 78%); -webkit-mask-image:radial-gradient(ellipse 80% 70% at 50% 30%,#000,transparent 78%);}
+.hero-orb{position:absolute; border-radius:50%; filter:blur(60px); opacity:.4; z-index:0;}
+.orb1{width:340px; height:340px; background:var(--indigo-soft); top:-80px; right:-60px;}
+.orb2{width:280px; height:280px; background:var(--teal-soft); bottom:-120px; left:-40px;}
+header.hero .wrap{position:relative; z-index:2;}
+.eyebrow{font-family:var(--mono); font-size:12px; letter-spacing:.16em; text-transform:uppercase; color:var(--indigo); display:flex; align-items:center; gap:11px; margin-bottom:24px;}
+.eyebrow::before{content:''; width:30px; height:1px; background:var(--indigo);}
+h1.title{font-family:var(--display); font-weight:700; font-size:clamp(32px,5.4vw,58px); line-height:1.05; letter-spacing:-.02em; margin:0 0 22px; max-width:900px;}
+h1.title .g{background:linear-gradient(120deg,var(--indigo),var(--teal)); -webkit-background-clip:text; background-clip:text; color:transparent;}
+.subtitle{font-size:18px; color:var(--ink-soft); max-width:680px; margin:0 0 36px;}
+.authors{display:flex; flex-wrap:wrap; gap:26px; margin-bottom:34px;}
+.author b{display:block; font-weight:600; font-size:14.5px;}
+.author span{color:var(--ink-faint); font-size:12.5px; font-family:var(--mono);}
+.kw-row{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:34px;}
+.kw{font-family:var(--mono); font-size:11.5px; padding:6px 13px; border:1px solid var(--line-strong); border-radius:20px; color:var(--ink-soft); background:#fff;}
+.hero-stats{display:flex; flex-wrap:wrap; gap:0; border:1px solid var(--line); border-radius:var(--radius); overflow:hidden; background:var(--bg-panel);}
+.hstat{flex:1; min-width:150px; padding:20px 22px; border-right:1px solid var(--line);}
+.hstat:last-child{border-right:none;}
+.hstat .num{font-family:var(--display); font-weight:700; font-size:26px; color:var(--indigo); line-height:1;}
+.hstat .num.t{color:var(--teal);} .hstat .num.a{color:var(--amber);} .hstat .num.v{color:var(--violet);}
+.hstat .lbl{font-size:12px; color:var(--ink-faint); margin-top:6px; font-family:var(--mono);}
+
+/* sections */
+section{padding:78px 0;}
+section:nth-child(even){background:var(--bg-soft);}
+.section-head{margin-bottom:42px; max-width:720px;}
+.sec-num{font-family:var(--mono); font-size:12px; color:var(--amber); letter-spacing:.1em; margin-bottom:11px; display:block;}
+h2.h{font-family:var(--display); font-weight:600; font-size:clamp(23px,3.2vw,33px); margin:0 0 13px; letter-spacing:-.015em;}
+.lead{color:var(--ink-soft); font-size:16px;}
+
+.reveal{opacity:0; transform:translateY(18px); transition:opacity .6s ease, transform .6s ease;}
+.reveal.in{opacity:1; transform:none;}
+
+/* abstract */
+.abstract-body{font-size:16.5px; max-width:820px; background:#fff; border:1px solid var(--line); border-left:3px solid var(--indigo); padding:28px 32px; border-radius:var(--radius); box-shadow:var(--shadow);}
+.abstract-body p{margin:0 0 15px;} .abstract-body p:last-child{margin-bottom:0;}
+.abstract-body b{color:var(--ink);}
+
+/* intro pillars */
+.pillars{display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:16px;}
+.pillar{background:#fff; border:1px solid var(--line); border-radius:var(--radius); padding:24px; transition:transform .2s, box-shadow .2s;}
+.pillar:hover{transform:translateY(-4px); box-shadow:var(--shadow);}
+.pillar .pico{width:40px; height:40px; border-radius:10px; display:flex; align-items:center; justify-content:center; margin-bottom:16px; font-family:var(--mono); font-weight:700; font-size:15px;}
+.pi-i{background:var(--indigo-soft); color:var(--indigo);} .pi-t{background:var(--teal-soft); color:var(--teal);} .pi-a{background:var(--amber-soft); color:var(--amber);} .pi-v{background:var(--violet-soft); color:var(--violet);}
+.pillar h3{font-family:var(--display); font-size:16px; margin:0 0 8px;}
+.pillar p{font-size:13.5px; color:var(--ink-soft); margin:0;}
+
+/* problem toggle */
+.toggle-row{display:flex; align-items:center; gap:16px; margin-bottom:30px; flex-wrap:wrap;}
+.switch{position:relative; width:210px; height:42px; background:#fff; border:1px solid var(--line-strong); border-radius:22px; cursor:pointer; padding:4px; display:flex;}
+.switch .thumb{position:absolute; top:4px; left:4px; width:calc(50% - 4px); height:calc(100% - 8px); background:var(--rose); border-radius:18px; transition:transform .35s cubic-bezier(.65,0,.35,1), background .35s;}
+.switch.on .thumb{transform:translateX(100%); background:var(--teal);}
+.switch span{flex:1; z-index:1; text-align:center; font-family:var(--mono); font-size:11px; line-height:34px; color:var(--ink-soft); transition:color .3s;}
+.switch.off span:first-child, .switch.on span:last-child{color:#fff;}
+.compare-stage{position:relative; background:#fff; border:1px solid var(--line); border-radius:var(--radius); padding:40px; min-height:300px; overflow:hidden; box-shadow:var(--shadow);}
+.compare-view{display:none;}
+.compare-view.active{display:block; animation:fadein .4s ease;}
+@keyframes fadein{from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:none;}}
+.central-diagram{display:flex; align-items:center; justify-content:center; flex-wrap:wrap; padding:26px 0 14px;}
+.node-box{font-family:var(--mono); font-size:11.5px; text-align:center; padding:16px 18px; border-radius:8px; border:1.5px solid var(--line-strong); background:var(--bg-soft); min-width:92px;}
+.hub{width:82px; height:82px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:var(--mono); font-size:10.5px; text-align:center; font-weight:700; position:relative;}
+.hub.central{background:var(--rose-soft); color:var(--rose); border:2px solid var(--rose);}
+.hub.central::after{content:''; position:absolute; inset:-6px; border-radius:50%; border:2px solid var(--rose); opacity:0; animation:pulse-breach 1.9s ease-out infinite;}
+@keyframes pulse-breach{0%{opacity:.75; inset:-4px;} 100%{opacity:0; inset:-30px;}}
+.spoke{width:62px; height:1.5px; background:var(--line-strong); position:relative;}
+.spoke.warn::after{content:''; position:absolute; top:-2.5px; left:0; width:6px; height:6px; border-radius:50%; background:var(--rose); animation:leak 1.7s linear infinite;}
+@keyframes leak{0%{left:0; opacity:1;} 90%{opacity:1;} 100%{left:100%; opacity:0;}}
+.chain-row{display:flex; align-items:center; justify-content:center; gap:8px; flex-wrap:wrap; margin-bottom:30px;}
+.block{font-family:var(--mono); font-size:10px; padding:12px 13px; border:1.5px solid var(--teal); color:var(--teal); background:var(--teal-soft); border-radius:6px; position:relative; animation:blockrise .5s ease backwards;}
+.block:nth-child(1){animation-delay:.05s;} .block:nth-child(3){animation-delay:.15s;} .block:nth-child(5){animation-delay:.25s;} .block:nth-child(7){animation-delay:.35s;}
+@keyframes blockrise{from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:none;}}
+.block::after{content:'✓'; position:absolute; top:-8px; right:-8px; width:17px; height:17px; border-radius:50%; background:var(--teal); color:#fff; font-size:9px; display:flex; align-items:center; justify-content:center;}
+.chain-link{width:14px; height:1.5px; background:var(--teal);}
+.compare-caption{font-size:14px; color:var(--ink-soft); text-align:center; max-width:540px; margin:0 auto;}
+.compare-caption b{color:var(--ink);}
+
+/* related work */
+.rw-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:16px;}
+.rw-card{background:#fff; border:1px solid var(--line); border-radius:var(--radius); padding:22px; transition:transform .18s, box-shadow .18s, border-color .18s;}
+.rw-card:hover{transform:translateY(-4px); box-shadow:var(--shadow); border-color:var(--indigo);}
+.rw-tag{font-family:var(--mono); font-size:10.5px; color:var(--amber); background:var(--amber-soft); display:inline-block; padding:3px 9px; border-radius:12px; margin-bottom:13px;}
+.rw-card h3{font-family:var(--display); font-size:15px; margin:0 0 9px; line-height:1.35;}
+.rw-card p{font-size:13px; color:var(--ink-soft); margin:0;}
+
+/* architecture */
+.arch-apps{display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:26px;}
+@media(max-width:820px){.arch-apps{grid-template-columns:1fr;}}
+.app-card{background:#fff; border:1px solid var(--line); border-radius:var(--radius); padding:24px; cursor:pointer; transition:border-color .18s, box-shadow .18s; position:relative; overflow:hidden;}
+.app-card::before{content:''; position:absolute; top:0; left:0; right:0; height:3px; background:var(--c);}
+.app-card:hover, .app-card.active{border-color:var(--c); box-shadow:var(--shadow);}
+.app-card .app-dir{font-family:var(--mono); font-size:12px; color:var(--c); font-weight:600; margin-bottom:4px;}
+.app-card h4{font-family:var(--display); font-size:16px; margin:0 0 10px;}
+.app-card .app-stack{font-family:var(--mono); font-size:11px; color:var(--ink-faint); margin-bottom:12px;}
+.app-card p{font-size:13px; color:var(--ink-soft); margin:0;}
+.arch-note{background:var(--indigo-soft); border-radius:var(--radius); padding:18px 22px; font-size:13.5px; color:var(--ink-soft);}
+.arch-note b{color:var(--indigo);}
+
+/* crypto layers */
+.crypto-grid{display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:8px;}
+@media(max-width:720px){.crypto-grid{grid-template-columns:1fr;}}
+.crypto-card{background:#fff; border:1px solid var(--line); border-radius:var(--radius); padding:24px;}
+.crypto-card .cbadge{display:inline-block; font-family:var(--mono); font-size:11px; padding:4px 11px; border-radius:6px; margin-bottom:14px; font-weight:600;}
+.cbadge.rsa{background:var(--violet-soft); color:var(--violet);}
+.cbadge.aes{background:var(--teal-soft); color:var(--teal);}
+.crypto-card h4{font-family:var(--display); font-size:16px; margin:0 0 8px;}
+.crypto-card p{font-size:13.5px; color:var(--ink-soft); margin:0 0 12px;}
+.crypto-card .cflow{font-family:var(--mono); font-size:11.5px; color:var(--ink-soft); background:var(--bg-soft); padding:10px 12px; border-radius:6px; line-height:1.9;}
+.crypto-card .cflow b{color:var(--ink);}
+
+/* contract code */
+.code-block{background:#0F1A20; color:#D6E2E0; border-radius:var(--radius); padding:22px 24px; font-family:var(--mono); font-size:12.5px; line-height:1.75; overflow-x:auto; box-shadow:var(--shadow);}
+.code-block .kw2{color:#7FB4FF;} .code-block .ty{color:#6FD6C0;} .code-block .fn{color:#F0C36D;} .code-block .cm{color:#5C6E73;} .code-block .st{color:#E39AA6;}
+
+/* flow simulator */
+.sim-wrap{background:#fff; border:1px solid var(--line); border-radius:var(--radius); padding:28px; box-shadow:var(--shadow);}
+.sim-svg-holder{width:100%; overflow-x:auto;}
+.sim-controls{display:flex; align-items:center; gap:10px; margin-top:20px; flex-wrap:wrap;}
+.btn{font-family:var(--mono); font-size:12px; letter-spacing:.03em; border:1px solid var(--ink); background:var(--ink); color:#fff; padding:9px 17px; border-radius:8px; cursor:pointer; transition:background .15s, border-color .15s, transform .1s;}
+.btn:hover{background:var(--indigo); border-color:var(--indigo);}
+.btn:active{transform:scale(.96);}
+.btn.ghost{background:transparent; color:var(--ink);}
+.btn.ghost:hover{background:var(--bg-soft); color:var(--ink);}
+.btn:disabled{opacity:.32; cursor:not-allowed;}
+.step-counter{font-family:var(--mono); font-size:12px; color:var(--ink-faint); margin-left:auto;}
+.step-panel{margin-top:20px; padding:18px 22px; background:var(--bg-soft); border-radius:8px; border:1px solid var(--line); min-height:82px;}
+.step-panel .step-title{font-family:var(--mono); font-weight:700; font-size:13px; color:var(--indigo); margin-bottom:6px;}
+.step-panel .step-desc{font-size:13.5px; color:var(--ink-soft);}
+.step-panel .payload{display:inline-block; margin-top:9px; font-family:var(--mono); font-size:11.5px; color:var(--amber); background:var(--amber-soft); padding:4px 9px; border-radius:5px; word-break:break-all;}
+svg.flow-svg{display:block; margin:0 auto;}
+.flow-node rect{fill:#fff; stroke:var(--line-strong); stroke-width:1.5; transition:stroke .25s, fill .25s;}
+.flow-node.active rect{stroke:var(--indigo); fill:var(--indigo-soft);}
+.flow-node text{font-family:var(--mono); fill:var(--ink); font-size:11px;}
+.flow-node .sub{fill:var(--ink-faint); font-size:9px;}
+.flow-edge{stroke:var(--line-strong); stroke-width:1.4;}
+.flow-edge.active{stroke:var(--indigo); stroke-width:2;}
+.flow-packet{fill:var(--amber); opacity:0;}
+
+/* stack */
+.stack-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:16px;}
+.stack-card{background:#fff; border:1px solid var(--line); border-radius:var(--radius); padding:20px; cursor:pointer;}
+.stack-card .stk-name{font-family:var(--mono); font-weight:700; font-size:13.5px; color:var(--indigo); margin-bottom:5px;}
+.stack-card .stk-role{font-size:11.5px; color:var(--amber); font-family:var(--mono); margin-bottom:10px; display:block;}
+.stack-card .stk-desc{font-size:12.5px; color:var(--ink-soft); max-height:0; overflow:hidden; transition:max-height .3s ease, margin-top .3s;}
+.stack-card.open .stk-desc{max-height:180px; margin-top:6px;}
+.stack-card .plus{float:right; font-family:var(--mono); color:var(--ink-faint); transition:transform .25s;}
+.stack-card.open .plus{transform:rotate(45deg);}
+
+/* how-it-works numbered steps */
+.hiw{display:grid; gap:14px;}
+.hiw-step{display:grid; grid-template-columns:56px 1fr; gap:18px; background:#fff; border:1px solid var(--line); border-radius:var(--radius); padding:22px; align-items:start; transition:border-color .18s, box-shadow .18s;}
+.hiw-step:hover{border-color:var(--teal); box-shadow:var(--shadow);}
+.hiw-num{font-family:var(--display); font-weight:700; font-size:24px; color:var(--teal); background:var(--teal-soft); width:46px; height:46px; border-radius:12px; display:flex; align-items:center; justify-content:center;}
+.hiw-step h4{font-family:var(--display); font-size:16px; margin:0 0 6px;}
+.hiw-step p{font-size:13.5px; color:var(--ink-soft); margin:0;}
+.hiw-step code{font-family:var(--mono); font-size:11.5px; background:var(--bg-soft); padding:2px 6px; border-radius:4px; color:var(--indigo);}
+
+/* results timeline */
+.timeline{position:relative; padding-left:30px; border-left:2px solid var(--line-strong);}
+.tl-item{position:relative; padding-bottom:24px;} .tl-item:last-child{padding-bottom:0;}
+.tl-item::before{content:''; position:absolute; left:-37px; top:3px; width:11px; height:11px; border-radius:50%; background:#fff; border:2px solid var(--teal);}
+.tl-item .tl-label{font-family:var(--mono); font-size:12px; color:var(--teal); margin-bottom:5px;}
+.tl-item code{display:inline-block; font-family:var(--mono); font-size:12px; background:#0F1A20; color:#DCEAE6; padding:9px 13px; border-radius:6px; margin-top:4px;}
+.repo-chip{display:inline-flex; align-items:center; gap:9px; font-family:var(--mono); font-size:12.5px; border:1px solid var(--line-strong); padding:9px 15px; border-radius:22px; margin-top:20px; color:var(--ink-soft); text-decoration:none;}
+.repo-chip:hover{border-color:var(--indigo); color:var(--indigo);}
+.repo-chip .dot2{width:8px; height:8px; border-radius:50%; background:var(--teal);}
+
+/* security note */
+.sec-note{background:var(--rose-soft); border:1px solid #F0C4C9; border-left:3px solid var(--rose); border-radius:var(--radius); padding:22px 26px; max-width:820px;}
+.sec-note h4{font-family:var(--display); font-size:15px; margin:0 0 8px; color:var(--rose);}
+.sec-note p{font-size:13.5px; color:var(--ink-soft); margin:0;}
+
+/* conclusion */
+.conclusion-box{background:linear-gradient(135deg,#0F1A20,#173038); color:#D6E2E0; border-radius:var(--radius); padding:36px 38px; max-width:820px; box-shadow:var(--shadow);}
+.conclusion-box .cq{color:var(--amber); font-family:var(--mono); font-size:12px; letter-spacing:.1em; text-transform:uppercase; margin-bottom:15px; display:block;}
+.conclusion-box p{margin:0; font-size:16px; color:#C4D2D0;}
+
+/* references */
+.ref-list{list-style:none; margin:0; padding:0; counter-reset:ref;}
+.ref-list li{counter-increment:ref; padding:13px 0 13px 44px; position:relative; font-size:13px; color:var(--ink-soft); border-bottom:1px solid var(--line);}
+.ref-list li:last-child{border-bottom:none;}
+.ref-list li::before{content:'[' counter(ref) ']'; position:absolute; left:0; top:13px; font-family:var(--mono); color:var(--amber); font-size:12px;}
+
+footer{padding:40px 0 64px; text-align:center;}
+footer p{font-family:var(--mono); font-size:11.5px; color:var(--ink-faint); margin:0;}
+</style>
+</head>
+<body>
+<div id="progress"></div>
+
+<nav class="top">
+  <div class="wrap">
+    <div class="brand"><span class="mark"></span>DID · PKI-AUTH</div>
+    <div class="navlinks">
+      <a href="#abstract">Abstract</a>
+      <a href="#intro">Intro</a>
+      <a href="#problem">Problem</a>
+      <a href="#related">Related</a>
+      <a href="#architecture">Architecture</a>
+      <a href="#crypto">Crypto</a>
+      <a href="#auth-sim">Auth Flow</a>
+      <a href="#data-sim">Data Flow</a>
+      <a href="#how">How It Works</a>
+      <a href="#stack">Stack</a>
+      <a href="#results">Setup</a>
+      <a href="#references">References</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-orb orb1"></div><div class="hero-orb orb2"></div>
+  <div class="wrap">
+    <span class="eyebrow">University of Guelph · Systems Project</span>
+    <h1 class="title">Decentralized Identity Management &amp; <span class="g">Passwordless Authentication</span></h1>
+    <p class="subtitle">A blockchain-based IAM platform that removes passwords entirely and gives users cryptographic ownership of their personal data — proven by a working three-app implementation.</p>
+    <div class="authors">
+      <div class="author"><b>Ripunjoy Madhab Buddha</b><span>rbuddha@uoguelph.ca</span></div>
+      <div class="author"><b>Shivam Baikerikar</b><span>sbaikeri@uoguelph.ca</span></div>
+    </div>
+    <div class="kw-row">
+      <span class="kw">Decentralized Identity</span>
+      <span class="kw">Passwordless Auth</span>
+      <span class="kw">Blockchain</span>
+      <span class="kw">PKI</span>
+      <span class="kw">Ethereum · Solidity</span>
+    </div>
+    <div class="hero-stats">
+      <div class="hstat"><div class="num">0</div><div class="lbl">passwords stored</div></div>
+      <div class="hstat"><div class="num t">3</div><div class="lbl">independent apps</div></div>
+      <div class="hstat"><div class="num a">2</div><div class="lbl">encryption layers</div></div>
+      <div class="hstat"><div class="num v">1</div><div class="lbl">consent-gated vault</div></div>
+    </div>
+  </div>
+</header>
+
+<!-- 01 ABSTRACT -->
+<section id="abstract">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="sec-num">01 — Abstract</span>
+      <h2 class="h">Why identity needs to leave the database</h2>
+    </div>
+    <div class="abstract-body reveal">
+      <p>Identity management systems today are mostly <b>centralized</b> — user identity data sits in a single location that then grants access to applications. That architecture invites data breaches and identity theft because of the single repository, and raises privacy concerns since a central authority controls users' information, creating risks of unauthorized surveillance and misuse.</p>
+      <p>This project proposes a <b>decentralized identity management system</b> using blockchain to address those challenges. Users control their information securely on blockchain nodes, mitigating breach and privacy risks. Focused on <b>Personally Identifiable Information (PII)</b>, it provides an access-control system that lets users selectively grant or revoke access to their data.</p>
+      <p>It adds a <b>passwordless authentication system</b> built on <b>Public Key Infrastructure (PKI)</b>, using public-key cryptography to strengthen security while eliminating traditional passwords. Together, decentralized identity and passwordless auth make digital identities more private, safe, and less dependent on passwords.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 02 INTRODUCTION -->
+<section id="intro">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="sec-num">02 — Introduction</span>
+      <h2 class="h">Four goals the system sets out to meet</h2>
+      <p class="lead">Centralized stores are a single point of failure and a locus of control over sensitive data. This IAM system decentralizes PII onto blockchain nodes and authenticates through PKI to fix both.</p>
+    </div>
+    <div class="pillars reveal">
+      <div class="pillar"><div class="pico pi-t">↯</div><h3>Tamper-resistant storage</h3><p>Distributing data across a network of nodes removes the traditional single point of failure and raises the system's overall resilience.</p></div>
+      <div class="pillar"><div class="pico pi-i">⚿</div><h3>Passwordless via PKI</h3><p>Cryptographic keys let users authenticate seamlessly across devices, cutting the credential-related incidents that plague password systems.</p></div>
+      <div class="pillar"><div class="pico pi-a">☑</div><h3>User-granted access</h3><p>PII stays under the owner's control — access to each field can be selectively granted or revoked on demand.</p></div>
+      <div class="pillar"><div class="pico pi-v">✦</div><h3>Phishing resistance</h3><p>No password to remember means nothing to phish. Reliance on keys adds a layer of protection against credential compromise.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 03 PROBLEM -->
+<section id="problem">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="sec-num">03 — The Problem</span>
+      <h2 class="h">One vault vs. many witnesses</h2>
+      <p class="lead">Flip the switch. In a centralized system one breach exposes everyone; in the proposed model data is distributed across nodes and encrypted with keys only the user holds.</p>
+    </div>
+    <div class="reveal">
+      <div class="toggle-row">
+        <div class="switch off" id="modelSwitch" role="button" tabindex="0" aria-label="Toggle identity model">
+          <div class="thumb"></div><span>Centralized</span><span>Decentralized</span>
+        </div>
+      </div>
+      <div class="compare-stage">
+        <div class="compare-view active" id="viewCentral">
+          <div class="central-diagram">
+            <div class="node-box">App A</div>
+            <div class="spoke warn"></div>
+            <div class="hub central">SINGLE<br>DB</div>
+            <div class="spoke warn" style="animation-delay:.5s"></div>
+            <div class="node-box">App B</div>
+          </div>
+          <p class="compare-caption"><b>Centralized model.</b> Every application reads and writes the same store. One compromised endpoint puts every user's PII at risk — the classic single point of failure the paper sets out to remove.</p>
+        </div>
+        <div class="compare-view" id="viewDecentral">
+          <div class="chain-row">
+            <div class="block">BLOCK 1</div><div class="chain-link"></div>
+            <div class="block">BLOCK 2</div><div class="chain-link"></div>
+            <div class="block">BLOCK 3</div><div class="chain-link"></div>
+            <div class="block">BLOCK …</div>
+          </div>
+          <p class="compare-caption"><b>Decentralized model.</b> Records are distributed across blockchain nodes; only the on-chain public key and non-secret profile fields ever touch the chain. Private keys and sensitive data never do.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 04 RELATED WORK -->
+<section id="related">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="sec-num">04 — Related Work</span>
+      <h2 class="h">Five prior approaches</h2>
+      <p class="lead">The design draws on a body of blockchain-identity research, each contributing a different piece of the puzzle. Hover a card to lift it.</p>
+    </div>
+    <div class="rw-grid reveal" id="rwGrid"></div>
+  </div>
+</section>
+
+<!-- 05 ARCHITECTURE -->
+<section id="architecture">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="sec-num">05 — Architecture</span>
+      <h2 class="h">A monorepo of three independent apps</h2>
+      <p class="lead">The implementation splits into three apps talking over a REST + WebSocket backend. Click a card to focus it. The backend is a broker — it never stores plaintext PII.</p>
+    </div>
+    <div class="arch-apps reveal" id="archApps"></div>
+    <div class="arch-note reveal"><b>The catch:</b> the blockchain, user app, and third-party app are all connected through the backend server, which acts purely as a communication medium. Off-chain, the backend keeps an encrypted vault — <code>keys.json</code>, <code>data.json</code>, <code>cmgmt.json</code> — while the chain holds only the identity registry.</div>
+
+    <div style="height:34px"></div>
+    <div class="section-head reveal" style="margin-bottom:20px">
+      <h2 class="h" style="font-size:22px">On-chain identity registry — <code style="font-family:var(--mono);font-size:.7em;color:var(--indigo)">user.sol</code></h2>
+      <p class="lead">A minimal Solidity contract maps a wallet address to a public profile. Only the public key and non-secret fields are ever written on-chain.</p>
+    </div>
+    <div class="code-block reveal">
+<span class="kw2">struct</span> <span class="ty">UserData</span> { <span class="kw2">string</span> name; <span class="kw2">string</span> email; <span class="kw2">string</span> publicKey; }<br>
+<span class="kw2">mapping</span>(<span class="kw2">address</span> => <span class="ty">UserData</span>) <span class="kw2">public</span> users;<br><br>
+<span class="cm">// exposed methods</span><br>
+<span class="fn">addUser</span>(...) · <span class="fn">updateUserData</span>(...) · <span class="fn">updatePublicKey</span>(...)<br>
+<span class="cm">// emits</span> <span class="st">UserAdded</span> · <span class="st">UserUpdated</span> · <span class="st">PublicKeyUpdated</span>
+    </div>
+  </div>
+</section>
+
+<!-- 06 CRYPTO -->
+<section id="crypto">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="sec-num">06 — Cryptography</span>
+      <h2 class="h">Two encryption layers, two jobs</h2>
+      <p class="lead">The system uses one algorithm to prove identity and another to protect data at rest — the private key never leaves the user's device in either.</p>
+    </div>
+    <div class="crypto-grid reveal">
+      <div class="crypto-card">
+        <span class="cbadge rsa">RSA-OAEP · 2048-bit · SHA-256</span>
+        <h4>For the login challenge</h4>
+        <p>The third party encrypts a one-time code with the user's on-chain public key. Only the matching private key can read it — that's the proof of identity.</p>
+        <div class="cflow"><b>public key</b> → encrypt OTP → <b>private key</b> → decrypt OTP</div>
+      </div>
+      <div class="crypto-card">
+        <span class="cbadge aes">AES-GCM · 256-bit</span>
+        <h4>For data at rest</h4>
+        <p>Sensitive values are encrypted client-side with a key derived from the user's wallet before being stored off-chain, and decrypted only inside the user's own app.</p>
+        <div class="cflow"><b>wallet key</b> → AES-encrypt in browser → off-chain vault</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 07 AUTH SIM -->
+<section id="auth-sim">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="sec-num">07 — Passwordless Login</span>
+      <h2 class="h">Prove ownership, not knowledge</h2>
+      <p class="lead">Step through the challenge–response ceremony, relayed over WebSockets. A random 10-digit one-time code encrypted with the public key can only be answered by the private-key holder — no password is ever exchanged.</p>
+    </div>
+    <div class="sim-wrap reveal">
+      <div class="sim-svg-holder"><svg id="authSvg" class="flow-svg" viewBox="0 0 760 260" width="760" height="260"></svg></div>
+      <div class="step-panel">
+        <div class="step-title" id="authStepTitle">Ready to simulate</div>
+        <div class="step-desc" id="authStepDesc">Press <b>Play</b> or <b>Next</b> to begin the handshake.</div>
+      </div>
+      <div class="sim-controls">
+        <button class="btn ghost" id="authReset">↺ Reset</button>
+        <button class="btn ghost" id="authPrev">← Prev</button>
+        <button class="btn" id="authPlay">▶ Play</button>
+        <button class="btn ghost" id="authNext">Next →</button>
+        <span class="step-counter" id="authCounter">Step 0 / 6</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 08 DATA SIM -->
+<section id="data-sim">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="sec-num">08 — Consent-Gated Data Sharing</span>
+      <h2 class="h">Sharing a SIN with UoG, on your terms</h2>
+      <p class="lead">The relying party requests a field with a purpose and expiry. If no valid consent exists, the wallet shows an Accept / Revoke prompt — and every grant is logged with an expiry date.</p>
+    </div>
+    <div class="sim-wrap reveal">
+      <div class="sim-svg-holder"><svg id="dataSvg" class="flow-svg" viewBox="0 0 760 260" width="760" height="260"></svg></div>
+      <div class="step-panel">
+        <div class="step-title" id="dataStepTitle">Ready to simulate</div>
+        <div class="step-desc" id="dataStepDesc">Press <b>Play</b> or <b>Next</b> to begin the request.</div>
+      </div>
+      <div class="sim-controls">
+        <button class="btn ghost" id="dataReset">↺ Reset</button>
+        <button class="btn ghost" id="dataPrev">← Prev</button>
+        <button class="btn" id="dataPlay">▶ Play</button>
+        <button class="btn ghost" id="dataNext">Next →</button>
+        <span class="step-counter" id="dataCounter">Step 0 / 5</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 09 HOW IT WORKS -->
+<section id="how">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="sec-num">09 — How the Implementation Works</span>
+      <h2 class="h">Five flows, end to end</h2>
+      <p class="lead">Sourced from the project repository — the exact ceremonies the running apps perform.</p>
+    </div>
+    <div class="hiw reveal" id="hiwGrid"></div>
+  </div>
+</section>
+
+<!-- 10 STACK -->
+<section id="stack">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="sec-num">10 — Software Stack</span>
+      <h2 class="h">What it's built with</h2>
+      <p class="lead">Tap a card for each tool's role in the system.</p>
+    </div>
+    <div class="stack-grid reveal" id="stackGrid"></div>
+  </div>
+</section>
+
+<!-- 11 RESULTS -->
+<section id="results">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="sec-num">11 — Results &amp; Setup</span>
+      <h2 class="h">Running it locally</h2>
+      <p class="lead">Implemented and published to GitHub. The frontends call the backend at <code style="font-family:var(--mono);font-size:.85em;color:var(--indigo)">localhost:3735</code>; open the user and third-party apps in separate tabs.</p>
+    </div>
+    <div class="timeline reveal" id="resultsTimeline"></div>
+    <a class="repo-chip reveal" href="https://github.com/ronnie-1947/blockchain-auth-iam" target="_blank" rel="noopener"><span class="dot2"></span>github.com/ronnie-1947/blockchain-auth-iam</a>
+
+    <div style="height:34px"></div>
+    <div class="sec-note reveal">
+      <h4>⚠ Security note (from the repo)</h4>
+      <p>This is a demonstration / educational project built around a local Ganache chain — it is not production-hardened. Off-chain keys are stored in plaintext JSON, the session cookie is a bare wallet address, and there's no rate-limiting or transport encryption on the local WebSocket. The goal is to illustrate the architecture of passwordless, consent-driven, blockchain-backed IAM, not to ship it as-is.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 12 CONCLUSION -->
+<section id="conclusion">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="sec-num">12 — Conclusion</span>
+      <h2 class="h">Control returns to the user</h2>
+    </div>
+    <div class="conclusion-box reveal">
+      <span class="cq">Closing note</span>
+      <p>By leveraging blockchain for storage and PKI for authentication, the system removes the central point of failure and the password as attack surface at the same time. Decentralized identity plus passwordless auth enhances security, reduces dependence on traditional passwords, and — without asking the user to do more than approve a prompt — keeps digital identity private, safe, and firmly in the owner's hands.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 13 REFERENCES -->
+<section id="references">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="sec-num">13 — References</span>
+      <h2 class="h">Cited works</h2>
+    </div>
+    <ul class="ref-list reveal" id="refList"></ul>
+  </div>
+</section>
+
+<footer>
+  <p>DECENTRALIZED IDENTITY &amp; PASSWORDLESS AUTH — INTERACTIVE EDITION · REBUILT FROM PAPER + REPOSITORY</p>
+</footer>
+
+<script>
+/* -------- DATA -------- */
+const relatedWorks = [
+  {tag:"[1] IJCVR 2022", title:"Secure IAM for decentralizing user data using blockchain", desc:"An OAuth-type authentication and encryption system with delegated, level-based access, plus a blockchain + IPFS document-verification scheme to verify identity and restrict control to others."},
+  {tag:"[2] Survey", title:"Blockchain-based decentralized passwordless authentication", desc:"Eliminates conventional alphanumeric characters and centralized databases; users pick from password categories like barcodes and smart cards tied to their private keys, and log in only when nodes approve."},
+  {tag:"[3] MSN 2020", title:"BIA — blockchain identity authorization mechanism", desc:"An Identity Authorization Module encrypts identity plaintext with user authorization; a Business Contract Module offers a smart-contract framework, over a dual-chain infrastructure."},
+  {tag:"[4] Healthcare 2021", title:"Health-ID for remote healthcare", desc:"Blockchain-based healthIDs uniquely identify patients and providers; regulator-verified attributes live on-chain, with Ethereum smart contracts easing identity and authentication across eHealth domains."},
+  {tag:"[5] IEEE PST 2017", title:"Identity management system based on blockchain", desc:"Associates user entity information with public-key addresses for true-identity determination and uses reputation tokens to encourage users to manage and protect their standing."}
+];
+
+const archApps = [
+  {dir:"backend_server", color:"var(--indigo)", name:"Backend Server", stack:"Node.js · Express · Web3.js · Truffle", desc:"API + WebSocket relay, smart-contract gateway, and off-chain encrypted vault + consent store. Exposes /auth, /eth, and /private route groups and brokers real-time messages between the two front-ends."},
+  {dir:"user_app", color:"var(--teal)", name:"User App (Wallet)", stack:"Next.js 14 · React 18 · SASS", desc:"The user's wallet: sign up, log in, store data, approve or deny requests, and manage consents. All decryption of login challenges and shared data happens here, under the user's control."},
+  {dir:"third_party", color:"var(--violet)", name:"Third-Party App (UoG)", stack:"Next.js 14 · React 18 · SASS", desc:"A relying party ('UOGuelph') that logs users in passwordlessly and requests specific data fields with a purpose and expiry, receiving plaintext only after the user consents."}
+];
+
+const stackItems = [
+  {name:"Solidity 0.8.15", role:"Smart contracts", desc:"Object-oriented language for the on-chain identity registry, specifying the rules and behavior of the user contract."},
+  {name:"Truffle", role:"Contract tooling", desc:"Compiles, tests, and deploys the Solidity contract to Ganache or a live Ethereum network via the EVM."},
+  {name:"Ganache", role:"Local test chain", desc:"Spins up a private Ethereum blockchain for development, with a GUI and CLI for inspecting accounts and blocks."},
+  {name:"Web3.js", role:"Chain connector", desc:"JavaScript library that lets both client and backend read from and write to the Ethereum network."},
+  {name:"Node.js", role:"Server runtime", desc:"V8-based JS runtime powering the backend; non-blocking I/O handles many concurrent connections at once."},
+  {name:"Express + ws", role:"REST + realtime", desc:"HTTP methods (GET/POST/UPDATE/DELETE) for the bulk of traffic, plus express-ws for the login and data-request relays."},
+  {name:"Next.js 14 / React 18", role:"Front end", desc:"Component-based UI for both the wallet and relying-party apps, using the App Router and SASS styling."},
+  {name:"Web Crypto API", role:"Browser crypto", desc:"crypto.subtle performs RSA-OAEP and AES-GCM in the browser so plaintext and keys never leave the device."}
+];
+
+const hiwSteps = [
+  {n:"1", t:"Sign up — identity creation", d:"In the user app, the user picks a Ganache wallet address and submits name and email. The backend generates a fresh RSA key pair, writes the profile + public key to the contract via <code>addUser</code>, and stores the private key and wallet-derived AES key off-chain. An empty consent record is initialized."},
+  {n:"2", t:"Passwordless login — challenge–response", d:"The third party sends the user's address; the backend looks up the public key. The third party generates a random 10-digit code, RSA-encrypts it, and the backend forwards the ciphertext to the wallet, which decrypts it with the private key. The returned plaintext, matched against the original, proves the user holds the key — <b>authenticated</b>."},
+  {n:"3", t:"Store sensitive data", d:"The user enters a key/value pair (e.g. <code>SIN → 123-456-789</code>). The value is AES-GCM encrypted in the browser with the wallet key, then sent to <code>/private/storeData</code> and saved to the off-chain vault. The plaintext never leaves the device."},
+  {n:"4", t:"Request data with consent", d:"The third party requests a field with <code>data</code>, <code>purpose</code>, and <code>expiry</code> over WebSocket. If valid, non-expired consent exists, the value is decrypted and returned. Otherwise the wallet shows an Accept / Revoke popup; on accept the backend records a new consent (default 1-year expiry) with an audit-log entry."},
+  {n:"5", t:"Manage consents", d:"From the consent dashboard the user sees every organization that requested data, each grant's active status, purpose, and expiry, and can edit or revoke any consent — appending a timestamped entry to that consent's audit log on every change."}
+];
+
+const installSteps = [
+  {label:"Backend + blockchain", code:"cd backend_server && yarn install\ncp .example.env .env   # set MODE, PORT, GANACHE_*\nyarn ganache           # local Ethereum chain"},
+  {label:"Compile & deploy contract", code:"yarn compile\nyarn deploy\nyarn start             # API + WebSocket on :3735"},
+  {label:"User app", code:"cd user_app && yarn install\nyarn dev               # :3000"},
+  {label:"Third-party app", code:"cd third_party && yarn install\nyarn dev               # :3001"},
+  {label:"Run the flows", code:"Sign up in the user app → run passwordless login\nand data-request flows from the third-party app"}
+];
+
+const references = [
+  "Rathee, T., & Singh, P. \"A secure identity and access management system for decentralising user data using blockchain.\" IJCVR 12.4 (2022): 343-359.",
+  "Singh R, Jain Y, Khawade S, Jinde A, Zanwar S. Blockchain-based Decentralized Password-less User Authentication System: A Survey.",
+  "Ren, X., Lin, F., Chen, Z., Tang, C., Zheng, Z., & Li, M. BIA: A blockchain-based identity authorization mechanism. MSN 2020, pp. 98-105. IEEE.",
+  "Javed, I. T., et al. \"Health-ID: A blockchain-based decentralized identity management for remote healthcare.\" Healthcare 9.6 (2021), MDPI.",
+  "Liu, Y., Zhao, Z., Guo, G., Wang, X., Tan, Z., & Wang, S. An identity management system based on blockchain. IEEE PST 2017, pp. 44-4409.",
+  "Mohammed, I. A. Identity & Access Management System Based on Blockchain. SSRN Electronic Journal (2021), 8, 477-483.",
+  "Lim, S. Y., Fotsing, P., Almasri, A., Musa, O., Mat Kiah, M. L., Ang, T., & Ismail, R. Blockchain Technology the Identity Management and Authentication Service Disruptor: A Survey. IJASEIT 8 (2018).",
+  "Al-Bassam, M. SCPKI: A Smart Contract-based PKI and Identity System. ACM BCC 2017, pp. 35-40."
+];
+
+/* -------- RENDER -------- */
+document.getElementById('rwGrid').innerHTML = relatedWorks.map(r=>`
+  <div class="rw-card"><span class="rw-tag">${r.tag}</span><h3>${r.title}</h3><p>${r.desc}</p></div>`).join('');
+
+const archAppsEl = document.getElementById('archApps');
+archAppsEl.innerHTML = archApps.map((a,i)=>`
+  <div class="app-card" data-i="${i}" style="--c:${a.color}">
+    <div class="app-dir">${a.dir}/</div><h4>${a.name}</h4>
+    <div class="app-stack">${a.stack}</div><p>${a.desc}</p></div>`).join('');
+archAppsEl.querySelectorAll('.app-card').forEach(c=>{
+  c.addEventListener('click',()=>{
+    archAppsEl.querySelectorAll('.app-card').forEach(x=>x.classList.remove('active'));
+    c.classList.add('active');
+  });
+});
+
+document.getElementById('hiwGrid').innerHTML = hiwSteps.map(s=>`
+  <div class="hiw-step"><div class="hiw-num">${s.n}</div><div><h4>${s.t}</h4><p>${s.d}</p></div></div>`).join('');
+
+document.getElementById('stackGrid').innerHTML = stackItems.map(s=>`
+  <div class="stack-card"><span class="plus">+</span><div class="stk-name">${s.name}</div>
+  <span class="stk-role">${s.role}</span><div class="stk-desc">${s.desc}</div></div>`).join('');
+document.querySelectorAll('.stack-card').forEach(c=>c.addEventListener('click',()=>c.classList.toggle('open')));
+
+document.getElementById('resultsTimeline').innerHTML = installSteps.map(s=>`
+  <div class="tl-item"><div class="tl-label">${s.label}</div><code>${s.code.replace(/\n/g,'<br>')}</code></div>`).join('');
+
+document.getElementById('refList').innerHTML = references.map(r=>`<li>${r}</li>`).join('');
+
+/* -------- TOGGLE -------- */
+const modelSwitch=document.getElementById('modelSwitch');
+const vC=document.getElementById('viewCentral'), vD=document.getElementById('viewDecentral');
+function flip(){const on=modelSwitch.classList.toggle('on'); modelSwitch.classList.toggle('off',!on); vC.classList.toggle('active',!on); vD.classList.toggle('active',on);}
+modelSwitch.addEventListener('click',flip);
+modelSwitch.addEventListener('keydown',e=>{if(e.key===' '||e.key==='Enter'){e.preventDefault();flip();}});
+
+/* -------- FLOW ENGINE -------- */
+function buildFlow(cfg){
+  const svg=document.getElementById(cfg.svgId), NS="http://www.w3.org/2000/svg";
+  const nodes=cfg.nodes, steps=cfg.steps;
+  const edgeKeys=new Set(); steps.forEach(s=>edgeKeys.add([s.from,s.to].sort().join('|')));
+  const edgeEls={};
+  edgeKeys.forEach(k=>{const [a,b]=k.split('|'),n1=nodes[a],n2=nodes[b];
+    const l=document.createElementNS(NS,'line');
+    l.setAttribute('x1',n1.x);l.setAttribute('y1',n1.y);l.setAttribute('x2',n2.x);l.setAttribute('y2',n2.y);
+    l.setAttribute('class','flow-edge'); svg.appendChild(l); edgeEls[k]=l;});
+  const packet=document.createElementNS(NS,'circle'); packet.setAttribute('r','6'); packet.setAttribute('class','flow-packet');
+  packet.setAttribute('style','transition:cx 700ms ease-in-out,cy 700ms ease-in-out,opacity 250ms ease;');
+  const nodeGroups={};
+  Object.entries(nodes).forEach(([key,n])=>{
+    const g=document.createElementNS(NS,'g'); g.setAttribute('class','flow-node');
+    const rect=document.createElementNS(NS,'rect');
+    rect.setAttribute('x',n.x-n.w/2);rect.setAttribute('y',n.y-n.h/2);rect.setAttribute('width',n.w);rect.setAttribute('height',n.h);rect.setAttribute('rx',8);
+    g.appendChild(rect);
+    const t=document.createElementNS(NS,'text'); t.setAttribute('x',n.x);t.setAttribute('y',n.y-2);t.setAttribute('text-anchor','middle');t.textContent=n.label; g.appendChild(t);
+    if(n.sub){const s=document.createElementNS(NS,'text'); s.setAttribute('x',n.x);s.setAttribute('y',n.y+13);s.setAttribute('text-anchor','middle');s.setAttribute('class','sub');s.textContent=n.sub; g.appendChild(s);}
+    svg.appendChild(g); nodeGroups[key]=g;
+  });
+  svg.appendChild(packet);
+  let idx=0, playTimer=null;
+  const titleEl=document.getElementById(cfg.titleId), descEl=document.getElementById(cfg.descId), counterEl=document.getElementById(cfg.counterId);
+  function clearActive(){Object.values(nodeGroups).forEach(g=>g.classList.remove('active'));Object.values(edgeEls).forEach(e=>e.classList.remove('active'));}
+  function render(){
+    clearActive();
+    if(idx===0){packet.style.opacity=0; titleEl.textContent="Ready to simulate"; descEl.innerHTML=cfg.introText; counterEl.textContent=`Step 0 / ${steps.length}`; document.getElementById(cfg.prevId).disabled=true; return;}
+    const s=steps[idx-1], n1=nodes[s.from], n2=nodes[s.to], ek=[s.from,s.to].sort().join('|');
+    edgeEls[ek].classList.add('active'); nodeGroups[s.from].classList.add('active'); nodeGroups[s.to].classList.add('active');
+    packet.setAttribute('cx',n1.x); packet.setAttribute('cy',n1.y); packet.style.opacity=1;
+    requestAnimationFrame(()=>{packet.setAttribute('cx',n2.x); packet.setAttribute('cy',n2.y);});
+    titleEl.textContent=`Step ${idx} — ${s.title}`;
+    descEl.innerHTML=s.desc+(s.payload?`<br><span class="payload">${s.payload}</span>`:'');
+    counterEl.textContent=`Step ${idx} / ${steps.length}`; document.getElementById(cfg.prevId).disabled=false;
+  }
+  function next(){if(idx>=steps.length){stopPlay();return;} idx++; render();}
+  function prev(){if(idx<=0)return; idx--; render();}
+  function reset(){stopPlay(); idx=0; render();}
+  function stopPlay(){clearInterval(playTimer); playTimer=null; document.getElementById(cfg.playId).textContent='▶ Play';}
+  function togglePlay(){if(playTimer){stopPlay();return;} if(idx>=steps.length)idx=0; document.getElementById(cfg.playId).textContent='⏸ Pause'; playTimer=setInterval(()=>{if(idx>=steps.length){stopPlay();return;} next();},1500);}
+  document.getElementById(cfg.nextId).addEventListener('click',()=>{stopPlay();next();});
+  document.getElementById(cfg.prevId).addEventListener('click',()=>{stopPlay();prev();});
+  document.getElementById(cfg.resetId).addEventListener('click',reset);
+  document.getElementById(cfg.playId).addEventListener('click',togglePlay);
+  render();
+}
+
+const flowNodes={
+  user:{x:100,y:190,w:126,h:56,label:"User Wallet",sub:"private key"},
+  backend:{x:340,y:190,w:134,h:56,label:"Backend",sub:"WS relay"},
+  chain:{x:340,y:58,w:134,h:50,label:"Blockchain",sub:"public key · profile"},
+  uog:{x:620,y:190,w:140,h:56,label:"Third Party",sub:"UoG · relying party"}
+};
+
+buildFlow({
+  svgId:"authSvg", nodes:flowNodes,
+  titleId:"authStepTitle",descId:"authStepDesc",counterId:"authCounter",
+  prevId:"authPrev",nextId:"authNext",playId:"authPlay",resetId:"authReset",
+  introText:"Press <b>Play</b> or <b>Next</b> to begin the handshake.",
+  steps:[
+    {from:"uog",to:"backend",title:"Send address",desc:"The third party sends the user's wallet address to the backend to start the login ceremony."},
+    {from:"backend",to:"chain",title:"Look up public key",desc:"The backend fetches the public key mapped to that address from the on-chain registry.",payload:"pubkey: 0x9d0B…f4d0"},
+    {from:"uog",to:"backend",title:"Encrypt 10-digit OTP",desc:"The third party generates a random 10-digit code and RSA-OAEP-encrypts it with the public key, sending the ciphertext to the backend.",payload:"enc: 7f3a…c02e"},
+    {from:"backend",to:"user",title:"Forward challenge",desc:"The backend relays the ciphertext to the user's wallet over WebSocket as a login prompt."},
+    {from:"user",to:"backend",title:"Decrypt with private key",desc:"The wallet decrypts the code with the user's private key and returns the plaintext to the backend.",payload:"code: 4819203756"},
+    {from:"backend",to:"uog",title:"Match → authenticated",desc:"The backend relays the plaintext back. The third party compares it to the code it generated — a match proves the user holds the private key. No password is ever exchanged."}
+  ]
+});
+
+buildFlow({
+  svgId:"dataSvg", nodes:flowNodes,
+  titleId:"dataStepTitle",descId:"dataStepDesc",counterId:"dataCounter",
+  prevId:"dataPrev",nextId:"dataNext",playId:"dataPlay",resetId:"dataReset",
+  introText:"Press <b>Play</b> or <b>Next</b> to begin the request.",
+  steps:[
+    {from:"uog",to:"backend",title:"Request a field",desc:"The third party requests a field with a purpose and expiry — for example, the user's SIN.",payload:"data · purpose · expiry"},
+    {from:"backend",to:"chain",title:"Check vault + consent",desc:"The backend checks the off-chain vault for the field and looks up any existing, non-expired consent."},
+    {from:"backend",to:"user",title:"Consent prompt",desc:"With no valid consent, the encrypted value goes to the wallet, which shows an Accept / Revoke popup.",payload:"enc: b91c…44af"},
+    {from:"user",to:"backend",title:"Accept + decrypt",desc:"On Accept, the wallet decrypts the value; the backend records a new consent (default 1-year expiry) with an audit-log entry."},
+    {from:"backend",to:"uog",title:"Deliver plaintext",desc:"The backend forwards the decrypted value to the third party. Without the user's approval, this step never happens."}
+  ]
+});
+
+/* -------- SCROLL REVEAL + PROGRESS -------- */
+const io=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in'); io.unobserve(e.target);}});},{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+const prog=document.getElementById('progress');
+addEventListener('scroll',()=>{const h=document.documentElement; const sc=h.scrollTop/(h.scrollHeight-h.clientHeight); prog.style.width=(sc*100)+'%';},{passive:true});
+</script>
+</body>
+</html>
