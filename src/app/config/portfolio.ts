@@ -572,4 +572,52 @@ export const projects: Project[] = [
     },
     highlight: "Web-readable paper",
   },
+  {
+    id: "federated-learning-dp",
+    title: "Secure Federated Learning with Differential Privacy",
+    category: "Research",
+    tagline:
+      "A federated learning system where clients train on their own data and only noisy, differentially private weight updates ever reach the server — raw records never leave the device.",
+    description: [
+      "A University of Guelph cybersecurity project (CIS*6560, under Prof. Rozita Dara) that pairs federated learning with differential privacy to train a shared model without pooling anyone's data. Centralizing training data creates one high-value target — a single breach exposes every contributor and drags the store under regimes like GDPR and HIPAA. Federated learning removes that target by keeping data on the device, but it isn't enough on its own: trained models memorize, and an attacker studying gradients or outputs can still infer facts about the training set. The paper works through four concrete attack surfaces — data breaches, membership inference, model inversion, and linkage attacks — and shows which of the two techniques answers each.",
+      "The implementation is a PyTorch + Flower + Opacus stack trained on MNIST (70,000 handwritten digits) split across simulated clients. Flower's server runs FedAvg, averaging each client's update weighted by how many examples it trained on; Opacus wraps the model, optimizer, and data loader in a PrivacyEngine that clips per-sample gradients (max_grad_norm) and adds calibrated Gaussian noise (noise_multiplier) before anything is shared. The codebase is deliberately split so neither half knows the other exists — model.py knows nothing about Flower, and lib/federated.py knows nothing about MNIST or CNNs — so swapping in a different model or dataset leaves the federated/DP machinery untouched. A run.sh script boots the server and three clients in parallel; each client only ever prints its own logs.",
+      "Across four rounds with ten clients, distributed loss fell from 43.68 to 39.62 and accuracy climbed from 4.77% to 11.65% — a healthy trend, but modest numbers the report is explicit about: hardware limits capped how far training could go, and thin documentation for libraries like PySyft meant testing several frameworks before settling on Flower + Opacus. The write-up is presented as a self-contained interactive web report — steppable pipeline and code, a repo-architecture walkthrough, and a live noise slider that shows the privacy/accuracy trade-off — rather than a PDF.",
+    ],
+    cover:
+      "https://res.cloudinary.com/kolart/image/upload/v1785263621/fl_1_i2aoji.png",
+    media: [
+      {
+        type: "image",
+        src: "https://res.cloudinary.com/kolart/image/upload/v1785263621/fl_1_i2aoji.png",
+        alt: "Infographic — the problem with centralized learning: three hospitals shipping private data into one central server, flagged high risk for data breach, privacy violation, compliance issues, and single point of failure",
+      },
+      {
+        type: "image",
+        src: "https://res.cloudinary.com/kolart/image/upload/v1785263620/fl_2_yia0i7.png",
+        alt: "Infographic — the federated solution: each hospital trains a local model and sends only encrypted, differentially private updates up to a securely aggregated global model, so data never leaves local sites",
+      },
+      {
+        type: "image",
+        src: "https://res.cloudinary.com/kolart/image/upload/v1785263620/fl_3_iethof.png",
+        alt: "Infographic — how differential privacy works: noise added to an original update produces a noisy update, with the epsilon privacy-budget guarantee and the resulting privacy, compliance, collaboration, and performance benefits",
+      },
+    ],
+    tech: [
+      "Python",
+      "PyTorch",
+      "Flower",
+      "Opacus",
+      "Differential Privacy",
+      "Federated Learning",
+      "FedAvg",
+      "CNN",
+      "Hydra",
+      "MNIST",
+    ],
+    links: {
+      github: "https://github.com/ronnie-1947/federated-learning",
+      paper: "/projects/federated-learning-report.html",
+    },
+    highlight: "Web-readable paper",
+  },
 ];
