@@ -279,7 +279,7 @@ export const projects: Project[] = [
     ],
     tech: ["React", "Next.js", "Node.js", "RESTful API", "JavaScript", "Sass"],
     links: {
-      live: "https://spotify-clone-hyuql1cmq-ronnie-1947.vercel.app",
+      live: "https://spotify-clone-jet.vercel.app",
       github: "https://github.com/ronnie-1947/spotify-clone",
     },
     highlight: "Live demo available",
