@@ -254,6 +254,53 @@ body {
     0 0 0.25rem rgba(6, 182, 212, 0.15);
 }
 
+/* Live-site pill — the primary call to action in a project card footer. */
+@keyframes liveDotPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.55); }
+  70%      { box-shadow: 0 0 0 0.3rem rgba(52, 211, 153, 0); }
+}
+
+@keyframes liveShimmer {
+  from { transform: translateX(-140%) skewX(-20deg); }
+  to   { transform: translateX(320%) skewX(-20deg); }
+}
+
+.live-link {
+  position: relative;
+  overflow: hidden;
+  background-image: linear-gradient(110deg, #4f46e5, #7c3aed 55%, #4f46e5);
+  box-shadow: 0 0.35rem 1rem rgba(99, 102, 241, 0.35);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, filter 0.3s ease;
+}
+
+.live-link:hover {
+  transform: translateY(-0.125rem);
+  filter: brightness(1.1);
+  box-shadow: 0 0.5rem 1.5rem rgba(99, 102, 241, 0.55);
+}
+
+.live-link::after {
+  content: "";
+  position: absolute;
+  inset-block: 0;
+  width: 40%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  transform: translateX(-140%) skewX(-20deg);
+}
+
+/* Sweep a highlight across the pill when the card is hovered or focused. */
+.project-card:hover .live-link::after,
+.live-link:focus-visible::after {
+  animation: liveShimmer 0.9s ease-out;
+}
+
+.live-dot { animation: liveDotPulse 2s ease-out infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  .live-link::after { animation: none !important; }
+  .live-dot { animation: none; }
+}
+
 /* ─── Featured projects carousel ─────────────────────────────────────────── */
 
 @keyframes progressGrow {

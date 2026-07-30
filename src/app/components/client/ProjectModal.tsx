@@ -105,42 +105,15 @@ export default function ProjectModal({
           </h3>
           <p className="mt-2 text-sm md:text-base text-gray-400">{project.tagline}</p>
 
-          {/* Description */}
-          <div className="mt-5 space-y-3">
-            {project.description.map((paragraph, i) => (
-              <p key={i} className="text-sm md:text-base text-gray-300 leading-relaxed">
-                {paragraph}
-              </p>
-            ))}
-          </div>
-
-          {/* Tech */}
-          <div className="mt-6">
-            <p className="font-mono text-xs text-indigo-400 uppercase tracking-wider mb-3">
-              Tech Stack
-            </p>
-            <div className="flex flex-wrap gap-2">
-              {project.tech.map((tech, i) => (
-                <span
-                  key={tech}
-                  className="skill-tag inline-flex items-center px-3 py-1.5 text-sm rounded-lg text-gray-300 border border-indigo-500/25 bg-indigo-900/30 transition-all duration-200 hover:border-cyan-400/50 hover:text-cyan-200"
-                  style={{ animationDelay: `${i * 0.04}s` }}
-                >
-                  {tech}
-                </span>
-              ))}
-            </div>
-          </div>
-
-          {/* Links */}
+          {/* Primary actions — kept above the fold, right under the title */}
           {(links.live || links.github || links.paper) && (
-            <div className="mt-7 flex flex-wrap gap-3">
+            <div className="mt-5 pb-5 flex flex-wrap gap-2.5 border-b border-white/10">
               {links.live && (
                 <a
                   href={links.live}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium bg-indigo-600 text-white shadow-lg shadow-indigo-500/30 transition-all duration-300 hover:bg-indigo-500"
+                  className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium bg-indigo-600 text-white shadow-lg shadow-indigo-500/30 transition-all duration-300 hover:bg-indigo-500 hover:-translate-y-0.5"
                 >
                   {linkIcons.live}
                   Live Site
@@ -170,6 +143,33 @@ export default function ProjectModal({
               )}
             </div>
           )}
+
+          {/* Description */}
+          <div className="mt-5 space-y-3">
+            {project.description.map((paragraph, i) => (
+              <p key={i} className="text-sm md:text-base text-gray-300 leading-relaxed">
+                {paragraph}
+              </p>
+            ))}
+          </div>
+
+          {/* Tech */}
+          <div className="mt-6">
+            <p className="font-mono text-xs text-indigo-400 uppercase tracking-wider mb-3">
+              Tech Stack
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {project.tech.map((tech, i) => (
+                <span
+                  key={tech}
+                  className="skill-tag inline-flex items-center px-3 py-1.5 text-sm rounded-lg text-gray-300 border border-indigo-500/25 bg-indigo-900/30 transition-all duration-200 hover:border-cyan-400/50 hover:text-cyan-200"
+                  style={{ animationDelay: `${i * 0.04}s` }}
+                >
+                  {tech}
+                </span>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </div>
