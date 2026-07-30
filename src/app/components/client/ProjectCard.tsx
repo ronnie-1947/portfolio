@@ -3,9 +3,13 @@
 import Image from "next/image";
 import { useRef } from "react";
 import type { Project } from "../../config/portfolio";
-import { cloudinaryFill } from "../../lib/cloudinary";
+import { blurBackground, coverLoader } from "../../lib/cloudinary";
 
 const MAX_VISIBLE_TECH = 4;
+
+// Cards above the fold on a desktop first row — fetched eagerly so the LCP
+// image isn't discovered late behind eight lazy siblings.
+const EAGER_CARDS = 3;
 
 const linkIcons = {
   live: (
@@ -69,13 +73,20 @@ export default function ProjectCard({
       style={{ animationDelay: `${index * 0.08}s` }}
       className="project-card group glass-card rounded-2xl overflow-hidden cursor-pointer flex flex-col opacity-0 animate-fade-in-up focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"
     >
-      {/* Cover */}
-      <div className="relative w-full aspect-[16/10] overflow-hidden bg-black/40">
+      {/* Cover — the blurred 16px placeholder paints instantly behind it */}
+      <div
+        className="relative w-full aspect-[16/10] overflow-hidden bg-black/40"
+        style={blurBackground(project.cover, "16:10")}
+      >
         <Image
-          src={cloudinaryFill(project.cover, "16:10")}
+          loader={coverLoader}
+          src={project.cover}
           alt={`${project.title} cover`}
           fill
-          sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
+          // The grid caps at max-w-360 (1440px), so a 3-up card never exceeds
+          // ~480px — 33vw would over-request by ~4x on a wide display.
+          sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 480px"
+          priority={index < EAGER_CARDS}
           className="object-cover transition-transform duration-500 group-hover:scale-105"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-[#080c18]/70 via-transparent to-transparent" />

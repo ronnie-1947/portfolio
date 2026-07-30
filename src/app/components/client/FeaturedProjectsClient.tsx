@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { Project } from "../../config/portfolio";
-import { cloudinaryFill } from "../../lib/cloudinary";
+import { blurBackground, slideLoader, thumbLoader } from "../../lib/cloudinary";
 import ProjectModal from "./ProjectModal";
 
 const AUTOPLAY_MS = 7000;
@@ -131,9 +131,13 @@ export default function FeaturedProjectsClient({
                     className="relative w-full min-w-0 shrink-0"
                   >
                     {/* Image */}
-                    <div className="relative aspect-video overflow-hidden bg-gray-100">
+                    <div
+                      className="relative aspect-video overflow-hidden bg-gray-100"
+                      style={blurBackground(project.cover, "16:9")}
+                    >
                       <Image
-                        src={cloudinaryFill(project.cover, "16:9")}
+                        loader={slideLoader}
+                        src={project.cover}
                         alt={`${project.title} cover`}
                         fill
                         sizes="(max-width: 1024px) 100vw, 60vw"
@@ -290,9 +294,13 @@ export default function FeaturedProjectsClient({
                   : "border-transparent shadow-[0_0.125rem_0.75rem_rgba(15,23,42,0.08)]"
               }`}
             >
-              <div className="relative aspect-4/3 bg-gray-100">
+              <div
+                className="relative aspect-4/3 bg-gray-100"
+                style={blurBackground(project.cover, "4:3")}
+              >
                 <Image
-                  src={cloudinaryFill(project.cover, "4:3")}
+                  loader={thumbLoader}
+                  src={project.cover}
                   alt={`${project.title} preview`}
                   fill
                   sizes="(max-width: 1024px) 13rem, 20vw"

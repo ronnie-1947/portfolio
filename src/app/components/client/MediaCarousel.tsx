@@ -3,9 +3,35 @@
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { ProjectMedia } from "../../config/portfolio";
-import { cloudinaryFill } from "../../lib/cloudinary";
+import { blurBackground, slideLoader } from "../../lib/cloudinary";
 
 const SWIPE_THRESHOLD = 50; // px
+// How many slides either side of the current one keep their image mounted.
+// Mounting all of them fires up to six full-size requests the moment the modal
+// opens; one neighbour each way is enough to make a swipe look instant.
+const PRELOAD_RADIUS = 1;
+
+/**
+ * YouTube always has `hqdefault` but it's 480x360 (4:3, letterboxed) — soft and
+ * badly cropped in a 16:9 frame. `maxresdefault` is a true 16:9 1280x720 but
+ * only exists for videos uploaded above 720p, so fall back when it 404s.
+ */
+function YouTubeThumb({ videoId, title }: { videoId: string; title: string }) {
+  const [src, setSrc] = useState(
+    `https://i.ytimg.com/vi/${videoId}/maxresdefault.jpg`,
+  );
+
+  return (
+    <Image
+      src={src}
+      alt={title}
+      fill
+      sizes="(max-width: 768px) 100vw, 48rem"
+      onError={() => setSrc(`https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`)}
+      className="object-cover"
+    />
+  );
+}
 
 export default function MediaCarousel({ media }: { media: ProjectMedia[] }) {
   const [index, setIndex] = useState(0);
@@ -66,16 +92,29 @@ export default function MediaCarousel({ media }: { media: ProjectMedia[] }) {
           className="flex h-full transition-transform duration-500 ease-out"
           style={{ transform: `translateX(-${index * 100}%)` }}
         >
-          {media.map((item, i) => (
-            <div key={i} className="relative w-full h-full shrink-0">
+          {media.map((item, i) => {
+            const isNear = Math.abs(i - index) <= PRELOAD_RADIUS;
+            return (
+            <div
+              key={i}
+              className="relative w-full h-full shrink-0"
+              style={
+                item.type === "image"
+                  ? blurBackground(item.src, "16:9")
+                  : undefined
+              }
+            >
               {item.type === "image" ? (
-                <Image
-                  src={cloudinaryFill(item.src, "16:9")}
-                  alt={item.alt}
-                  fill
-                  sizes="(max-width: 768px) 100vw, 48rem"
-                  className="object-cover"
-                />
+                isNear && (
+                  <Image
+                    loader={slideLoader}
+                    src={item.src}
+                    alt={item.alt}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 48rem"
+                    className="object-cover"
+                  />
+                )
               ) : playingIndex === i ? (
                 <iframe
                   src={`https://www.youtube-nocookie.com/embed/${item.videoId}?autoplay=1`}
@@ -91,13 +130,9 @@ export default function MediaCarousel({ media }: { media: ProjectMedia[] }) {
                   aria-label={`Play video: ${item.title}`}
                   className="group absolute inset-0 w-full h-full cursor-pointer"
                 >
-                  <Image
-                    src={`https://i.ytimg.com/vi/${item.videoId}/hqdefault.jpg`}
-                    alt={item.title}
-                    fill
-                    sizes="(max-width: 768px) 100vw, 48rem"
-                    className="object-cover"
-                  />
+                  {isNear && (
+                    <YouTubeThumb videoId={item.videoId} title={item.title} />
+                  )}
                   <span className="absolute inset-0 bg-black/35 transition-colors duration-300 group-hover:bg-black/20" />
                   <span className="absolute inset-0 flex items-center justify-center">
                     <span className="flex items-center justify-center w-16 h-16 rounded-full bg-indigo-600/90 text-white shadow-lg shadow-indigo-500/40 transition-transform duration-300 group-hover:scale-110">
@@ -109,7 +144,8 @@ export default function MediaCarousel({ media }: { media: ProjectMedia[] }) {
                 </button>
               )}
             </div>
-          ))}
+            );
+          })}
         </div>
 
         {/* Prev / next */}
