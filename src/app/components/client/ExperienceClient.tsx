@@ -102,11 +102,22 @@ export default function ExperienceClient({
 
               {/* Company */}
               <p
-                className={`text-xs md:text-sm 2xl:text-base mt-0.5 ${
+                className={`text-xs md:text-sm 2xl:text-base mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-1 ${
                   isLight ? "text-indigo-600" : "text-indigo-400"
                 }`}
               >
                 {exp.company}
+                {exp.employmentType && (
+                  <span
+                    className={`font-mono text-[0.6rem] 2xl:text-[0.7rem] uppercase tracking-wider px-1.5 py-0.5 rounded-md ${
+                      isLight
+                        ? "bg-indigo-50 text-indigo-500/90"
+                        : "bg-indigo-500/10 text-indigo-300/80"
+                    }`}
+                  >
+                    {exp.employmentType}
+                  </span>
+                )}
               </p>
 
               {/* Location */}

@@ -6,6 +6,8 @@ export type Experience = {
   company: string;
   location: string;
   period: string;
+  /** Optional badge next to the company, e.g. "Self-employed" */
+  employmentType?: string;
   details: string[];
   skills: string[];
 };

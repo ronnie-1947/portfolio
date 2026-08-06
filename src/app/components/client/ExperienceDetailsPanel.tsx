@@ -61,11 +61,24 @@ export default function ExperienceDetailsPanel({
           {selectedExp.role}
         </h3>
         <p
-          className={`text-sm md:text-base 2xl:text-lg ${
+          className={`text-sm md:text-base 2xl:text-lg flex flex-wrap items-center gap-x-2 gap-y-1.5 ${
             isLight ? "text-gray-500" : "text-gray-400"
           }`}
         >
-          {selectedExp.company} · {selectedExp.location}
+          <span>
+            {selectedExp.company} · {selectedExp.location}
+          </span>
+          {selectedExp.employmentType && (
+            <span
+              className={`font-mono text-[0.65rem] 2xl:text-xs uppercase tracking-wider px-2 py-0.5 rounded-full border ${
+                isLight
+                  ? "bg-indigo-50 border-indigo-200 text-indigo-600"
+                  : "bg-indigo-500/10 border-indigo-500/20 text-indigo-300"
+              }`}
+            >
+              {selectedExp.employmentType}
+            </span>
+          )}
         </p>
       </div>
 
