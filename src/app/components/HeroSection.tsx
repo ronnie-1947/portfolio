@@ -3,7 +3,7 @@ import GooeyButton from "./ui/btn-gooey";
 import TypewriterEffect from "./client/TypewriterEffect";
 import BgShapes1 from "./ui/bg-shapes-1";
 import WaveMask from "./ui/WaveMask";
-import { LINKEDIN_URL, GITHUB_URL } from "../config/portfolio";
+import { LINKEDIN_URL, GITHUB_URL, RESUME_URL } from "../config/portfolio";
 
 export default function HeroSection({
   profileImage,
@@ -23,6 +23,33 @@ export default function HeroSection({
 
       <div className="absolute inset-0 bg-black/85" style={{ zIndex: 1 }} />
       <BgShapes1 />
+
+      {/* Resume download */}
+      <a
+        href={RESUME_URL}
+        download="Ripunjoy_Buddha_Resume.pdf"
+        aria-label="Download resume (PDF)"
+        title="<ICON DOWNLOAD> resume"
+        className="resume-btn absolute top-5 right-5 sm:top-8 sm:right-8 z-30 animate-fade-in"
+      >
+        <span className="resume-btn-inner flex items-center gap-2 px-3.5 py-2.5 sm:pl-4 sm:pr-5 sm:py-3">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={2}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="w-4 h-4 sm:w-[1.1rem] sm:h-[1.1rem] shrink-0 text-cyan-300"
+          >
+            <path d="M12 3v12m0 0-4-4m4 4 4-4M4 21h16" />
+          </svg>
+          <span className="hidden sm:inline text-sm font-semibold tracking-wide bg-linear-to-br from-cyan-300 to-indigo-400 bg-clip-text text-transparent">
+            Resume
+          </span>
+        </span>
+      </a>
 
       <div className="relative mt-8 z-20 text-center space-y-3 sm:space-y-4 lg:space-y-6 animate-fade-in-up max-w-2xl mx-auto w-full">
         {/* Profile avatar with glowing border */}

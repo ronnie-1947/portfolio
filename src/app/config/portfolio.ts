@@ -1,6 +1,7 @@
 export const PROFILE_IMAGE = "/profile.JPG";
 export const LINKEDIN_URL = "https://www.linkedin.com/in/ripunjoy-buddha";
 export const GITHUB_URL = "https://github.com/ronnie-1947";
+export const RESUME_URL = "/Resume.pdf";
 
 export const experiences = [
   {

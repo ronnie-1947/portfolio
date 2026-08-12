@@ -415,6 +415,60 @@ body {
   }
 }
 
+/* ─── Resume download button ─────────────────────────────────────────────── */
+
+.resume-btn {
+  display: inline-block;
+  padding: 0.09375rem;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #06b6d4, #6366f1, #a855f7);
+  box-shadow:
+    0 0 1rem rgba(6, 182, 212, 0.25),
+    0 0 2rem rgba(99, 102, 241, 0.18);
+  transition: box-shadow 0.35s ease, transform 0.35s ease;
+}
+
+.resume-btn:hover,
+.resume-btn:focus-visible {
+  transform: translateY(-0.125rem) scale(1.04);
+  box-shadow:
+    0 0 1.5rem rgba(6, 182, 212, 0.4),
+    0 0 3rem rgba(99, 102, 241, 0.3),
+    0 0 4rem rgba(168, 85, 247, 0.18);
+}
+
+.resume-btn:active {
+  transform: translateY(-0.125rem) scale(0.97);
+}
+
+.resume-btn-inner {
+  position: relative;
+  overflow: hidden;
+  background: rgba(8, 12, 24, 0.85);
+  backdrop-filter: blur(0.625rem);
+  border-radius: 999px;
+}
+
+.resume-btn-inner::after {
+  content: "";
+  position: absolute;
+  inset-block: 0;
+  width: 40%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+  transform: translateX(-140%) skewX(-20deg);
+}
+
+.resume-btn:hover .resume-btn-inner::after,
+.resume-btn:focus-visible .resume-btn-inner::after {
+  animation: liveShimmer 0.9s ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .resume-btn-inner::after { animation: none !important; }
+  .resume-btn:hover,
+  .resume-btn:focus-visible { transform: none; }
+}
+
 /* ─── Avatar glow ────────────────────────────────────────────────────────── */
 
 .avatar-glow-wrapper {
