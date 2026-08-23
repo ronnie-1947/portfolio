@@ -21,7 +21,7 @@ export default function HeroSection({
         style={{ backgroundImage: "url('/portfolio_background.webp')", zIndex: 0 }}
       />
 
-      <div className="absolute inset-0 bg-black/65" style={{ zIndex: 1 }} />
+      <div className="absolute inset-0 bg-black/70" style={{ zIndex: 1 }} />
       <BgShapes1 />
 
       {/* Resume download */}
