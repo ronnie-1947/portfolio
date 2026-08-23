@@ -18,10 +18,10 @@ export default function HeroSection({
       {/* Background image */}
       <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: "url('/background.png')", zIndex: 0 }}
+        style={{ backgroundImage: "url('/portfolio_background.webp')", zIndex: 0 }}
       />
 
-      <div className="absolute inset-0 bg-black/85" style={{ zIndex: 1 }} />
+      <div className="absolute inset-0 bg-black/65" style={{ zIndex: 1 }} />
       <BgShapes1 />
 
       {/* Resume download */}
