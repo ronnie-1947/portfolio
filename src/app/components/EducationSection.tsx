@@ -20,8 +20,6 @@ export default function EducationSection({ education, credentials, organizations
     <section
       id="education"
       data-band="education"
-      data-tone="light"
-      data-fade="dark"
       className="rb-band-fade rb-band-pad relative text-ink"
     >
       <Container>

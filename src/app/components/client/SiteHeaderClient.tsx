@@ -9,7 +9,6 @@ import { buttonClass, iconButtonClass } from "../ui/buttonStyles";
 import CommandPalette, { type PaletteProject } from "./CommandPalette";
 import MenuSheet from "./MenuSheet";
 import SectionTabs from "./SectionTabs";
-import ThemeMenu from "./ThemeMenu";
 import type { SiteLinks } from "./homeNav";
 import { HOME_SECTION_IDS, handleSectionLinkClick, scrollToSection, type HomeSectionId } from "../../lib/sections";
 import { useScrollSpy } from "../../lib/useScrollSpy";
@@ -28,13 +27,11 @@ type SiteHeaderClientProps = {
 export default function SiteHeaderClient({ handle, counts, projects, links }: SiteHeaderClientProps) {
   const headerRef = useRef<HTMLElement>(null);
   const [overlay, setOverlay] = useState<"palette" | "sheet" | null>(null);
-  const [themeMenuOpen, setThemeMenuOpen] = useState(false);
   const returnFocus = useRef<HTMLElement | null>(null);
   const { active, headerHidden } = useScrollSpy(HOME_SECTION_IDS, headerRef, overlay !== null);
 
   const openOverlay = useCallback((which: "palette" | "sheet") => {
     returnFocus.current = document.activeElement as HTMLElement | null;
-    setThemeMenuOpen(false);
     setOverlay(which);
   }, []);
 
@@ -77,7 +74,6 @@ export default function SiteHeaderClient({ handle, counts, projects, links }: Si
         ref={headerRef}
         data-site-header=""
         data-band="header"
-        data-tone="dark"
         data-hidden={headerHidden ? "true" : undefined}
         className="rb-header"
       >
@@ -123,7 +119,6 @@ export default function SiteHeaderClient({ handle, counts, projects, links }: Si
               >
                 <GoSearch aria-hidden="true" className="size-4" />
               </button>
-              <ThemeMenu open={themeMenuOpen} onOpenChange={setThemeMenuOpen} />
               <a href={links.resume} download className={buttonClass("secondary", "sm", "", "hidden lg:inline-flex")}>
                 <GoDownload aria-hidden="true" className="size-4" />
                 Resume

@@ -5,7 +5,7 @@ const LINK = "inline-flex min-h-8 items-center text-muted hover:text-accent hove
 
 export default function SiteFooter({ name }: { name: string }) {
   return (
-    <footer data-band="footer" data-tone="dark" className="border-t border-line bg-canvas text-xs text-muted">
+    <footer data-band="footer" className="border-t border-line bg-canvas text-xs text-muted">
       <div className="rb-container flex flex-col flex-wrap items-center gap-x-6 gap-y-3 pt-7 pb-[max(28px,env(safe-area-inset-bottom))] text-center md:flex-row md:text-left">
         <span className="flex items-center gap-2.5">
           <BrandMark size="sm" />© {new Date().getFullYear()} {name}

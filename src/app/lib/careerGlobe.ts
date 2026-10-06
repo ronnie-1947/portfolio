@@ -17,7 +17,6 @@ export type GlobeStop = { lat: number; lon: number };
 
 export type GlobeOptions = {
   stops: GlobeStop[];
-  dark: boolean;
   reduced: boolean;
   dotsUrl: string;
   /** Number of arcs fully drawn so far (0 → only the first stop is reached). */
@@ -28,7 +27,6 @@ export type GlobeOptions = {
 
 export type GlobeController = {
   focus: (index: number) => void;
-  setDark: (dark: boolean) => void;
   destroy: () => void;
 };
 
@@ -120,7 +118,7 @@ export function createCareerGlobe(
 ): GlobeController {
   const { canvas, wrap, tip, fallback } = els;
   const ctx = canvas.getContext("2d");
-  if (!ctx) return { focus() {}, setDark() {}, destroy() {} };
+  if (!ctx) return { focus() {}, destroy() {} };
 
   const places = opts.stops.map((s) => ({ ...s, v: vec(s.lat, s.lon) }));
   const arcs = buildArcs(places.map((p) => p.v));
@@ -150,7 +148,6 @@ export function createCareerGlobe(
     screen: [] as ScreenPoint[],
     still: shouldRenderStill(),
     drawn: false,
-    dark: opts.dark,
     raf: 0,
     destroyed: false,
   };
@@ -164,7 +161,6 @@ export function createCareerGlobe(
     g.last = Math.max(g.last, now);
     if (!g.W) return;
     const still = reduced || g.still;
-    const dark = g.dark;
     if (!still && (g.dots || now - g.start > 1500)) g.tourT += dt;
     const prog = arcs.map((_, i) => Math.max(0, Math.min(1, (g.tourT - i * STEP_MS) / ARC_MS)));
     const reached = prog.filter((p) => p >= 1).length;
@@ -233,23 +229,23 @@ export function createCareerGlobe(
 
     // Halo, sphere body, rim.
     let gr = ctx.createRadialGradient(cx, cy, R * 0.9, cx, cy, R * 1.32);
-    gr.addColorStop(0, dark ? "rgba(163,113,247,0.34)" : "rgba(130,80,223,0.16)");
-    gr.addColorStop(0.35, dark ? "rgba(47,129,247,0.14)" : "rgba(9,105,218,0.07)");
+    gr.addColorStop(0, "rgba(163,113,247,0.34)");
+    gr.addColorStop(0.35, "rgba(47,129,247,0.14)");
     gr.addColorStop(1, "rgba(47,129,247,0)");
     ctx.fillStyle = gr;
     ctx.beginPath();
     ctx.arc(cx, cy, R * 1.32, 0, Math.PI * 2);
     ctx.fill();
     gr = ctx.createRadialGradient(cx - R * 0.35, cy - R * 0.45, R * 0.05, cx, cy, R * 1.02);
-    gr.addColorStop(0, dark ? "#1c2333" : "#ffffff");
-    gr.addColorStop(1, dark ? "#090c12" : "#e6eaef");
+    gr.addColorStop(0, "#1c2333");
+    gr.addColorStop(1, "#090c12");
     ctx.fillStyle = gr;
     ctx.beginPath();
     ctx.arc(cx, cy, R, 0, Math.PI * 2);
     ctx.fill();
     const rim = ctx.createLinearGradient(cx - R, cy - R, cx + R, cy + R);
-    rim.addColorStop(0, dark ? "rgba(163,113,247,0.75)" : "rgba(130,80,223,0.45)");
-    rim.addColorStop(1, dark ? "rgba(86,212,221,0.3)" : "rgba(9,105,218,0.25)");
+    rim.addColorStop(0, "rgba(163,113,247,0.75)");
+    rim.addColorStop(1, "rgba(86,212,221,0.3)");
     ctx.lineWidth = 1.2;
     ctx.strokeStyle = rim;
     ctx.stroke();
@@ -271,8 +267,8 @@ export function createCareerGlobe(
         if (z2 <= 0.02) continue;
         buckets[Math.min(3, Math.floor(z2 * 4))].push(cx + R * x1, cy - R * (y * ct - z1 * st));
       }
-      const alpha = dark ? [0.2, 0.38, 0.6, 0.85] : [0.18, 0.3, 0.45, 0.62];
-      const rgb = dark ? "166,180,210" : "87,96,106";
+      const alpha = [0.2, 0.38, 0.6, 0.85];
+      const rgb = "166,180,210";
       for (let b = 0; b < 4; b++) {
         ctx.fillStyle = `rgba(${rgb},${alpha[b]})`;
         const pts = buckets[b];
@@ -300,7 +296,7 @@ export function createCareerGlobe(
           ctx.moveTo(run[0][0], run[0][1]);
           for (let q = 1; q < run.length; q++) ctx.lineTo(run[q][0], run[q][1]);
           ctx.lineCap = "round";
-          ctx.strokeStyle = dark ? "rgba(120,140,255,0.16)" : "rgba(9,105,218,0.12)";
+          ctx.strokeStyle = "rgba(120,140,255,0.16)";
           ctx.lineWidth = 6;
           ctx.stroke();
           ctx.strokeStyle = lg;
@@ -377,16 +373,16 @@ export function createCareerGlobe(
       if (g.hover === i) {
         ctx.beginPath();
         ctx.arc(s[0], s[1], 9, 0, Math.PI * 2);
-        ctx.strokeStyle = dark ? "rgba(47,129,247,0.9)" : "rgba(9,105,218,0.9)";
+        ctx.strokeStyle = "rgba(47,129,247,0.9)";
         ctx.lineWidth = 2;
         ctx.stroke();
       }
       ctx.beginPath();
       ctx.arc(s[0], s[1], last ? 4.6 : 3.4, 0, Math.PI * 2);
-      ctx.fillStyle = last ? "#3fb950" : dark ? "#e6edf3" : "#1f2328";
+      ctx.fillStyle = last ? "#3fb950" : "#e6edf3";
       ctx.fill();
       ctx.lineWidth = 1.6;
-      ctx.strokeStyle = dark ? "rgba(13,17,23,0.9)" : "rgba(255,255,255,0.95)";
+      ctx.strokeStyle = "rgba(13,17,23,0.9)";
       ctx.stroke();
     });
 
@@ -559,11 +555,6 @@ export function createCareerGlobe(
       g.sticky = true;
       g.drawn = false;
       setPin(i);
-    },
-    setDark(dark) {
-      if (g.dark === dark) return;
-      g.dark = dark;
-      redraw();
     },
     destroy() {
       g.destroyed = true;

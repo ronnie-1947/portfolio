@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 import { createCareerGlobe, type GlobeController } from "../../lib/careerGlobe";
 import { prefersReducedMotion } from "../../lib/useMediaQuery";
-import { useTheme } from "../../lib/useTheme";
 
 export type CareerStop = {
   label: string;
@@ -25,9 +24,6 @@ export default function CareerGlobe({ stops }: { stops: CareerStop[] }) {
   const globe = useRef<GlobeController | null>(null);
   const [reached, setReached] = useState(0);
   const [pin, setPin] = useState(-1);
-  // The overview band is dark in every theme except "light".
-  const dark = useTheme() !== "light";
-  const darkRef = useRef(dark);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -38,7 +34,6 @@ export default function CareerGlobe({ stops }: { stops: CareerStop[] }) {
       { canvas, wrap, tip, fallback: fallbackRef.current },
       {
         stops,
-        dark: darkRef.current,
         reduced: prefersReducedMotion(),
         dotsUrl: "/globe/land-dots.json",
         onReached: setReached,
@@ -50,11 +45,6 @@ export default function CareerGlobe({ stops }: { stops: CareerStop[] }) {
       globe.current = null;
     };
   }, [stops]);
-
-  useEffect(() => {
-    darkRef.current = dark;
-    globe.current?.setDark(dark);
-  }, [dark]);
 
   const pinned = pin >= 0 ? stops[pin] : null;
   const places = stops.map((s) => s.place.replace(",", ""));

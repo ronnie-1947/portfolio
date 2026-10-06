@@ -29,8 +29,7 @@ export default function SkillsSection({ skills, files }: SkillsSectionProps) {
     <section
       id="skills"
       data-band="skills"
-      data-tone="dark"
-      data-fade="light-surface"
+      data-fade="surface"
       className="rb-band-fade-soft rb-band-pad relative overflow-hidden text-ink"
     >
       <div

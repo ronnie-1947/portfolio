@@ -517,10 +517,8 @@ body {
 }
 
 /* ═══ Home v2 — GitHub-flavoured redesign ════════════════════════════════════
- * Every band on the home page carries data-tone="dark" | "light". The palette
- * blocks below resolve per band, so html[data-theme] (set by the theme switcher,
- * absent = "mixed") can force every band to one tone. Components only ever use
- * the semantic tokens (bg-canvas, text-muted, border-line …), never raw hex.
+ * Dark only. The palette below is defined once on .rb-home; components only
+ * ever use the semantic tokens (bg-canvas, text-muted, border-line …), never raw hex.
  * Everything here is prefixed rb- so it can't collide with /projects styles.
  * ───────────────────────────────────────────────────────────────────────── */
 
@@ -571,12 +569,10 @@ body {
   --shadow-overlay: var(--rb-ovl);
 }
 
-/* ─── Tone palettes ─────────────────────────────────────────────────────── */
+/* ─── Palette ───────────────────────────────────────────────────────────── */
 
-:root:not([data-theme="light"]) [data-tone="dark"],
-:root[data-theme="dark"] [data-tone] {
+.rb-home {
   color-scheme: dark;
-  --rb-dark: 1;
   --rb-bg: #0d1117;
   --rb-sf: #161b22;
   --rb-bd: #30363d;
@@ -623,81 +619,20 @@ body {
   --rb-chip-fg: #fd8c73;
 }
 
-:root:not([data-theme="dark"]) [data-tone="light"],
-:root[data-theme="light"] [data-tone] {
-  color-scheme: light;
-  --rb-dark: 0;
-  --rb-bg: #ffffff;
-  --rb-sf: #f6f8fa;
-  --rb-bd: #d0d7de;
-  --rb-fg: #1f2328;
-  --rb-mu: #656d76;
-  --rb-ac: #0969da;
-  --rb-gn: #1a7f37;
-  --rb-pu: #8250df;
-  --rb-sub: rgba(208, 215, 222, 0.32);
-  --rb-tlbg: #ddf4ff;
-  --rb-tlfg: #0969da;
-  --rb-ctr: rgba(175, 184, 193, 0.2);
-  --rb-btn: #f6f8fa;
-  --rb-btnh: #eef1f4;
-  --rb-btnbd: rgba(31, 35, 40, 0.15);
-  --rb-pri: #1f883d;
-  --rb-prih: #1a7f37;
-  --rb-diff: #dafbe1;
-  --rb-diffn: #aceebb;
-  --rb-hunk: #ddf4ff;
-  --rb-inset: #f6f8fa;
-  --rb-grad: linear-gradient(90deg, #8250df 0%, #0969da 55%, #1b7c83 100%);
-  --rb-lift: 0 18px 40px -12px rgba(66, 74, 83, 0.35);
-  --rb-glare: rgba(9, 105, 218, 0.07);
-  --rb-star: rgba(31, 35, 40, 0.16);
-  --rb-grid: rgba(31, 35, 40, 0.045);
-  --rb-glow: 0.4;
-  --rb-synk: #cf222e;
-  --rb-syns: #0a3069;
-  --rb-synn: #8250df;
-  --rb-sync: #6e7781;
-  --rb-synf: #0550ae;
-  --rb-hdr: rgba(255, 255, 255, 0.8);
-  --rb-ovl: 0 16px 48px rgba(140, 149, 159, 0.35);
-  --rb-layer-a: 0.14;
-  --rb-layer-a-soft: 0.22;
-  --rb-layer-a-lit: 0.34;
-  --rb-layer-grid: 0.18;
-  --rb-layer-south: 0.34;
-  --rb-layer-west: 0.24;
-  --rb-sec: 188, 76, 0;
-  --rb-chip-bg: rgba(255, 255, 255, 0.92);
-  --rb-chip-fg: #bc4c00;
-}
 
 /* data-variant="surface": the Pinned band sits one step off the page canvas. */
-:root:not([data-theme="light"]) [data-tone="dark"][data-variant="surface"],
-:root[data-theme="dark"] [data-tone][data-variant="surface"] {
+[data-variant="surface"] {
   --rb-bg: #010409;
   --rb-sf: #0d1117;
 }
-:root:not([data-theme="dark"]) [data-tone="light"][data-variant="surface"],
-:root[data-theme="light"] [data-tone][data-variant="surface"] {
-  --rb-bg: #f6f8fa;
-  --rb-sf: #ffffff;
-}
 
-/* Each band fades in from the band above it. data-fade names that band's tone
- * in the mixed theme; a forced theme flattens every band to one tone. */
-[data-fade="dark"] { --rb-fade: #0d1117; }
-[data-fade="light"] { --rb-fade: #ffffff; }
-[data-fade="light-surface"] { --rb-fade: #f6f8fa; }
-:root[data-theme="light"] [data-fade] { --rb-fade: #ffffff; }
-:root[data-theme="light"] [data-fade$="surface"] { --rb-fade: #f6f8fa; }
-:root[data-theme="dark"] [data-fade] { --rb-fade: #0d1117; }
-:root[data-theme="dark"] [data-fade$="surface"] { --rb-fade: #010409; }
+/* Each band's top edge fades in from the band above (see .rb-band-fade*). */
+.rb-home { --rb-fade: #0d1117; }
+[data-fade="surface"] { --rb-fade: #010409; }
 
 /* ─── Page shell, layout tiers, fluid type ──────────────────────────────── */
 
 body:has(.rb-home) { background: #0d1117; }
-:root[data-theme="light"] body:has(.rb-home) { background: #ffffff; }
 
 .rb-home {
   --rb-g: 16px;
@@ -720,7 +655,6 @@ body:has(.rb-home) { background: #0d1117; }
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-:root[data-theme="light"] .rb-home { background: #ffffff; color: #1f2328; }
 /* Base layer, so utilities such as hover:underline still win over the reset. */
 @layer base {
   .rb-home a { color: inherit; text-decoration: none; }
@@ -997,7 +931,7 @@ body:has(.rb-home) { background: #0d1117; }
 }
 .rb-layer {
   --a: var(--rb-layer-a);
-  --c: color-mix(in srgb, var(--layer-d) calc(var(--rb-dark) * 100%), var(--layer-l));
+  --c: var(--layer-d);
   position: absolute;
   left: calc(var(--S) / -2);
   top: calc(var(--S) / -2);
@@ -1064,13 +998,13 @@ body:has(.rb-home) { background: #0d1117; }
 }
 .rb-layer[data-lit="true"] .rb-layer-south { background: rgba(var(--rgb), 0.5); }
 .rb-layer[data-lit="true"] .rb-layer-west { background: rgba(var(--rgb), 0.38); }
-.rb-layer-label { color: var(--c); text-shadow: 0 0 12px rgba(1, 4, 9, calc(var(--rb-dark) * 0.8)); }
+.rb-layer-label { color: var(--c); text-shadow: 0 0 12px rgba(1, 4, 9, 0.8); }
 
-.rb-layer--cloud { --rgb: 86, 212, 221; --layer-d: #56d4dd; --layer-l: #1b7c83; --S: 300px; --T: 14px; --z0: 0px; --z1: 0px; --d-in: 0ms; --d-out: 200ms; }
-.rb-layer--databases { --rgb: 210, 153, 34; --layer-d: #d29922; --layer-l: #9a6700; --S: 228px; --T: 16px; --z0: 24px; --z1: 70px; --d-in: 90ms; --d-out: 150ms; }
-.rb-layer--backend { --rgb: 63, 185, 80; --layer-d: #3fb950; --layer-l: #1a7f37; --S: 228px; --T: 16px; --z0: 48px; --z1: 136px; --d-in: 180ms; --d-out: 100ms; }
-.rb-layer--frontend { --rgb: 47, 129, 247; --layer-d: #2f81f7; --layer-l: #0969da; --S: 228px; --T: 16px; --z0: 72px; --z1: 202px; --d-in: 270ms; --d-out: 50ms; }
-.rb-layer--ai { --rgb: 163, 113, 247; --layer-d: #a371f7; --layer-l: #8250df; --S: 164px; --T: 10px; --z0: 96px; --z1: 272px; --d-in: 360ms; --d-out: 0ms; }
+.rb-layer--cloud { --rgb: 86, 212, 221; --layer-d: #56d4dd; --S: 300px; --T: 14px; --z0: 0px; --z1: 0px; --d-in: 0ms; --d-out: 200ms; }
+.rb-layer--databases { --rgb: 210, 153, 34; --layer-d: #d29922; --S: 228px; --T: 16px; --z0: 24px; --z1: 70px; --d-in: 90ms; --d-out: 150ms; }
+.rb-layer--backend { --rgb: 63, 185, 80; --layer-d: #3fb950; --S: 228px; --T: 16px; --z0: 48px; --z1: 136px; --d-in: 180ms; --d-out: 100ms; }
+.rb-layer--frontend { --rgb: 47, 129, 247; --layer-d: #2f81f7; --S: 228px; --T: 16px; --z0: 72px; --z1: 202px; --d-in: 270ms; --d-out: 50ms; }
+.rb-layer--ai { --rgb: 163, 113, 247; --layer-d: #a371f7; --S: 164px; --T: 10px; --z0: 96px; --z1: 272px; --d-in: 360ms; --d-out: 0ms; }
 
 .rb-ring-wrap {
   position: absolute;
@@ -1174,10 +1108,10 @@ body:has(.rb-home) { background: #0d1117; }
 @media (width >= 48rem) { .rb-coins { grid-template-columns: repeat(3, 148px); gap: 12px 40px; } }
 @media (width >= 64rem) { .rb-coins { grid-template-columns: repeat(3, 160px); } }
 
-.rb-coin { --coin: color-mix(in srgb, var(--coin-d) calc(var(--rb-dark) * 100%), var(--coin-l)); }
-.rb-coin--green { --coin-l: #1a7f37; --coin-d: #3fb950; --coin-rgb: 63, 185, 80; --coin-tint: #e6f8ea; --coin-ring: conic-gradient(from 200deg, #3fb950, #1a7f37, #56d4dd, #3fb950); }
-.rb-coin--amber { --coin-l: #9a6700; --coin-d: #d29922; --coin-rgb: 210, 153, 34; --coin-tint: #fff4dc; --coin-ring: conic-gradient(from 200deg, #d29922, #fd8c73, #d29922, #d29922); }
-.rb-coin--blue { --coin-l: #0969da; --coin-d: #2f81f7; --coin-rgb: 47, 129, 247; --coin-tint: #e3f0ff; --coin-ring: conic-gradient(from 200deg, #2f81f7, #56d4dd, #0969da, #2f81f7); }
+.rb-coin { --coin: var(--coin-d); }
+.rb-coin--green { --coin-d: #3fb950; --coin-rgb: 63, 185, 80; --coin-ring: conic-gradient(from 200deg, #3fb950, #1a7f37, #56d4dd, #3fb950); }
+.rb-coin--amber { --coin-d: #d29922; --coin-rgb: 210, 153, 34; --coin-ring: conic-gradient(from 200deg, #d29922, #fd8c73, #d29922, #d29922); }
+.rb-coin--blue { --coin-d: #2f81f7; --coin-rgb: 47, 129, 247; --coin-ring: conic-gradient(from 200deg, #2f81f7, #56d4dd, #0969da, #2f81f7); }
 .rb-coin-inner {
   position: relative;
   display: block;
@@ -1200,7 +1134,7 @@ body:has(.rb-home) { background: #0d1117; }
   display: block;
   padding: 5px;
   background: var(--coin-ring);
-  box-shadow: 0 14px calc(30px + var(--rb-dark) * 6px) calc(-12px + var(--rb-dark) * 2px) rgba(var(--coin-rgb), calc(0.6 - var(--rb-dark) * 0.05));
+  box-shadow: 0 14px 36px -10px rgba(var(--coin-rgb), 0.55);
 }
 .rb-coin[aria-pressed="true"] .rb-coin-front { opacity: 0; }
 .rb-coin-disc {
@@ -1209,10 +1143,8 @@ body:has(.rb-home) { background: #0d1117; }
   width: 100%;
   height: 100%;
   border-radius: 50%;
-  background: radial-gradient(circle at 32% 26%, color-mix(in srgb, #2d333b calc(var(--rb-dark) * 100%), #ffffff), color-mix(in srgb, #161b22 calc(var(--rb-dark) * 100%), var(--coin-tint)) 71%);
-  box-shadow:
-    inset 0 2px 8px color-mix(in srgb, rgba(1, 4, 9, 0.6) calc(var(--rb-dark) * 100%), rgba(31, 35, 40, 0.12)),
-    inset 0 0 0 1px rgba(255, 255, 255, calc(0.6 - var(--rb-dark) * 0.54));
+  background: radial-gradient(circle at 32% 26%, #2d333b, #161b22 72%);
+  box-shadow: inset 0 2px 8px rgba(1, 4, 9, 0.6), inset 0 0 0 1px rgba(255, 255, 255, 0.06);
 }
 .rb-coin-back {
   display: flex;

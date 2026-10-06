@@ -19,7 +19,6 @@ export default function OverviewSection({ profile, stops, coreSkills, degree, un
     <section
       id="about"
       data-band="overview"
-      data-tone="dark"
       className="relative overflow-hidden bg-canvas pt-[clamp(24px,4vw,56px)] pb-12 text-ink"
     >
       <div aria-hidden="true" className="rb-hero-grid pointer-events-none absolute inset-0" />

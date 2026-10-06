@@ -44,7 +44,7 @@ export default function FeatureProjectCard({ project }: { project: Project }) {
           </div>
         </div>
         <div className="flex min-w-0 flex-[1_1_360px] items-center py-2 [perspective:1400px]">
-          {/* Fixed dark browser chrome in every theme, like a real screenshot. */}
+          {/* Fixed browser chrome, like a real screenshot. */}
           <div className="rb-browser-skew w-full overflow-hidden rounded-lg border border-[#30363d] bg-[#0d1117] shadow-[0_30px_60px_-24px_rgba(31,35,40,0.45)]">
             <div className="flex h-8 items-center gap-1.5 border-b border-[#30363d] bg-[#161b22] px-2.5">
               <span className="size-2.5 rounded-full bg-[#30363d]" />

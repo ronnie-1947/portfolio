@@ -4,10 +4,9 @@ import { useEffect, useMemo, useRef, useState, type ComponentType } from "react"
 import { useRouter } from "next/navigation";
 import { GoCodeSquare, GoCopy, GoDownload, GoLinkExternal, GoRepo, GoSearch } from "react-icons/go";
 import Kbd from "../ui/Kbd";
-import { SECTION_NAV, THEME_OPTIONS, type SiteLinks } from "./homeNav";
+import { SECTION_NAV, type SiteLinks } from "./homeNav";
 import { HOME_SECTION_IDS, scrollToSection } from "../../lib/sections";
 import { useCopyText } from "../../lib/useCopyText";
-import { setTheme, useTheme } from "../../lib/useTheme";
 
 export type PaletteProject = { id: string; title: string; status: string };
 
@@ -25,10 +24,9 @@ type CommandPaletteProps = {
   onClose: () => void;
 };
 
-// ⌘K / "/" launcher: jump to a section, open a project, copy the email, switch theme.
+// ⌘K / "/" launcher: jump to a section, open a project, copy the email.
 export default function CommandPalette({ projects, links, onClose }: CommandPaletteProps) {
   const router = useRouter();
-  const theme = useTheme();
   const { copy } = useCopyText(links.email);
   const [query, setQuery] = useState("");
   const [selected, setSelected] = useState(0);
@@ -81,20 +79,8 @@ export default function CommandPalette({ projects, links, onClose }: CommandPale
         onClose();
       },
     });
-    THEME_OPTIONS.forEach((o) =>
-      list.push({
-        group: "Theme",
-        label: `Switch theme: ${o.label}`,
-        hint: theme === o.id ? "current" : "",
-        icon: o.icon,
-        run: () => {
-          setTheme(o.id);
-          onClose();
-        },
-      }),
-    );
     return list;
-  }, [projects, links, theme, copy, onClose, router]);
+  }, [projects, links, copy, onClose, router]);
 
   const q = query.trim().toLowerCase();
   const items = q ? commands.filter((c) => `${c.label} ${c.group} ${c.hint}`.toLowerCase().includes(q)) : commands;
@@ -138,7 +124,6 @@ export default function CommandPalette({ projects, links, onClose }: CommandPale
   return (
     <div
       data-band="palette"
-      data-tone="dark"
       onMouseDown={(e) => e.target === e.currentTarget && onClose()}
       className="rb-pal-wrap"
     >

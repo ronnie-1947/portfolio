@@ -68,7 +68,7 @@ export default function IssueForm({ owner, email }: IssueFormProps) {
             </span>
             <button type="submit" className={buttonClass("primary", "lg", "basis-full md:h-9 md:basis-auto")}>
               <GoIssueOpened aria-hidden="true" className="size-4" />
-              Open an issue
+              Send Email
             </button>
           </div>
         </div>

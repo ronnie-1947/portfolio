@@ -25,8 +25,6 @@ export default function ExperienceSection({ experiences }: { experiences: Experi
     <section
       id="experience"
       data-band="experience"
-      data-tone="light"
-      data-fade="dark"
       className="rb-band-fade rb-band-pad relative text-ink"
     >
       <Container>

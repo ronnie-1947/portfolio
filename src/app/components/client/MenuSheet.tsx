@@ -3,20 +3,18 @@
 import { useEffect, useRef } from "react";
 import { GoDownload, GoX } from "react-icons/go";
 import { buttonClass } from "../ui/buttonStyles";
-import { THEME_OPTIONS, type SiteLinks } from "./homeNav";
+import type { SiteLinks } from "./homeNav";
 import { trapTab } from "../../lib/focusTrap";
 import { useCopyText } from "../../lib/useCopyText";
-import { setTheme, useTheme } from "../../lib/useTheme";
 
 type MenuSheetProps = {
   links: SiteLinks;
   onClose: () => void;
 };
 
-// Phone-only bottom sheet: theme, resume and profile links.
+// Phone-only bottom sheet: resume and profile links.
 export default function MenuSheet({ links, onClose }: MenuSheetProps) {
   const sheetRef = useRef<HTMLDivElement>(null);
-  const theme = useTheme();
   const { copied, copy } = useCopyText(links.email);
 
   useEffect(() => {
@@ -32,7 +30,6 @@ export default function MenuSheet({ links, onClose }: MenuSheetProps) {
   return (
     <div
       data-band="sheet"
-      data-tone="dark"
       onMouseDown={(e) => e.target === e.currentTarget && onClose()}
       className="fixed inset-0 z-90 flex items-end bg-[rgba(1,4,9,0.55)]"
     >
@@ -55,24 +52,7 @@ export default function MenuSheet({ links, onClose }: MenuSheetProps) {
             <GoX className="size-4" />
           </button>
         </div>
-        <div className="mt-1 mb-2 text-xs font-semibold text-muted">Theme</div>
-        <div role="radiogroup" aria-label="Theme" className="grid grid-cols-3 gap-1 rounded-md border border-line p-1">
-          {THEME_OPTIONS.map(({ id, label }) => (
-            <button
-              key={id}
-              type="button"
-              role="radio"
-              aria-checked={theme === id}
-              onClick={() => setTheme(id)}
-              className={`h-11 cursor-pointer rounded border-0 text-sm text-ink ${
-                theme === id ? "bg-btn font-semibold shadow-[0_0_0_1px_var(--rb-bd)]" : "bg-transparent"
-              }`}
-            >
-              {label}
-            </button>
-          ))}
-        </div>
-        <a href={links.resume} download className={buttonClass("primary", "hero", "mt-4 w-full", "flex")}>
+        <a href={links.resume} download className={buttonClass("primary", "hero", "mt-2 w-full", "flex")}>
           <GoDownload className="size-4" />
           Download resume
         </a>

@@ -20,9 +20,7 @@ export default function PinnedSection({ pinned, totalCount }: PinnedSectionProps
     <section
       id="projects"
       data-band="pinned"
-      data-tone="light"
       data-variant="surface"
-      data-fade="light"
       className="rb-band-pinned relative text-ink"
     >
       <Container>

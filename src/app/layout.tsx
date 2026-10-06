@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Mona_Sans } from "next/font/google";
 import localFont from "next/font/local";
-import { themeInitScript } from "./lib/theme";
-// @ts-ignore
 import "./globals.css";
 
 const geistSans = Geist({
@@ -54,11 +52,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    // The theme script may set data-theme before hydration.
-    <html lang="en" suppressHydrationWarning>
-      <head>
-        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
-      </head>
+    <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${monaSans.variable} ${monaspace.variable} antialiased`}
       >

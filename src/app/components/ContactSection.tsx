@@ -19,8 +19,6 @@ export default function ContactSection({ owner, remote }: ContactSectionProps) {
     <section
       id="contact"
       data-band="contact"
-      data-tone="dark"
-      data-fade="light"
       className="rb-band-fade-soft rb-band-pad relative overflow-hidden text-ink"
     >
       <div
