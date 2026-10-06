@@ -73,7 +73,9 @@ const linkClass = (isActive: boolean) =>
       : "text-gray-400 hover:text-white hover:bg-white/10"
   }`;
 
-export default function Navbar() {
+// `mobileNav={false}` drops the floating top pill on phones — the home page has
+// its own sticky header there.
+export default function Navbar({ mobileNav = true }: { mobileNav?: boolean }) {
   const pathname = usePathname();
   const isHome = pathname === "/";
   const [active, setActive] = useState("about");
@@ -151,9 +153,11 @@ export default function Navbar() {
       </nav>
 
       {/* Mobile: horizontal floating pill nav at top */}
-      <nav className="md:hidden fixed top-4 left-1/2 -translate-x-1/2 z-50 flex items-center gap-1 px-2 py-2 rounded-full bg-white/4 backdrop-blur-md border border-white/9 shadow-[0_0.5rem_2rem_rgba(0,0,0,0.3)]">
-        {renderItems()}
-      </nav>
+      {mobileNav && (
+        <nav className="md:hidden fixed top-4 left-1/2 -translate-x-1/2 z-50 flex items-center gap-1 px-2 py-2 rounded-full bg-white/4 backdrop-blur-md border border-white/9 shadow-[0_0.5rem_2rem_rgba(0,0,0,0.3)]">
+          {renderItems()}
+        </nav>
+      )}
     </>
   );
 }

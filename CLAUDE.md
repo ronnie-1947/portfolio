@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project
 
-A personal portfolio site for Ripunjoy Buddha, built with Next.js (App Router), React 19, TypeScript, and Tailwind CSS 4. Single-page site: Hero, Experience, Skills, Education, Contact sections.
+A personal portfolio site for Ripunjoy Buddha, built with Next.js (App Router), React 19, TypeScript, and Tailwind CSS 4. Two routes: the home page (`/`, a GitHub-profile-style single page: Overview, Experience, Pinned projects, Skills, Academic background, Contact) and the project showcase (`/projects`).
 
 ## Commands
 
@@ -19,11 +19,18 @@ There is no test suite configured in this repo.
 
 ## Architecture
 
-- App Router single-page app: everything renders from `src/app/page.tsx`, which composes section components in order (Navbar, Hero, Experience, Skills, Education, Contact). There is no routing beyond the one page.
-- All page content (work experience, skills, education, certifications, profile links/images) is centralized as typed data in `src/app/config/portfolio.ts`. To update resume/portfolio content, edit that file rather than the components.
-- **Server/client split pattern**: most section components (e.g. `ExperienceSection.tsx`) are plain server components that just type their props and delegate rendering to a matching `"use client"` component under `src/app/components/client/` (e.g. `client/ExperienceClient.tsx`). When a section needs interactivity (hover/click state, animation), keep the server component as a thin typed wrapper and put the `"use client"` logic in `components/client/`.
-- `src/app/components/ui/` holds small presentational/decorative primitives (gooey buttons, background shapes, wave mask dividers) shared across sections.
-- Styling is Tailwind CSS 4 (via `@tailwindcss/postcss`, no `tailwind.config.*`) plus a set of hand-written keyframe animations, glass/light card styles, and section-specific utility classes (timeline, photo collage grid, avatar glow) defined directly in `src/app/globals.css`. Reuse those existing classes/animations for new UI rather than re-implementing similar effects inline.
-- Sections alternate dark (`bg-[#080c18]`, page default) and light (`bg-white`) backgrounds; components that support both take a `theme: "dark" | "light"` prop (see `ExperienceSection`) rather than reading a global theme context.
+- `src/app/page.tsx` composes the home page in order: the shared `Navbar` side nav (same component as `/projects`; its phone top pill is turned off with `mobileNav={false}` because the home header covers phones), `SiteHeader` (sticky header + command palette + phone menu), `OverviewSection`, `ExperienceSection`, `PinnedSection`, `SkillsSection`, `EducationSection`, `ContactSection`, `SiteFooter`. `src/app/projects/page.tsx` is the separate project showcase (still on the older `Navbar` / `ProjectsSection` components and styles).
+- All page content (profile, work experience, skills, education, credentials, projects, globe stops, pinned order, links) is centralized as typed data in `src/app/config/portfolio.ts`. To update resume/portfolio content, edit that file rather than the components.
+- **Server/client split pattern**: section components in `src/app/components/` are server components that type their props, shape the data and delegate interactivity to `"use client"` components under `src/app/components/client/` (e.g. `ExperienceSection.tsx` → `client/CommitGraph.tsx`). Keep `"use client"` on the smallest piece that needs it; static markup stays in server components, and client wrappers (`TiltCard`, `Reveal`) take server-rendered children.
+- `src/app/components/ui/` holds small shared primitives (`Container`, `SectionHeading`, `Topic`, `Label`, `Counter`, `Kbd`, CSS-only `Tooltip`, `BrandMark`, `buttonStyles.ts`, a few Octicons missing from `react-icons/go`). Icons come from `react-icons/go` (GitHub Octicons).
+- `src/app/lib/` holds framework-free helpers and hooks: `theme.ts` / `useTheme.ts`, `useMediaQuery.ts`, `sections.ts` (section ids, scroll-to-section), `useScrollSpy.ts`, `useReveal.ts`, `focusTrap.ts`, `useCopyText.ts`, `skillCode.ts`, `careerGlobe.ts` (canvas globe renderer), `cloudinary.ts`.
+
+## Styling and theming
+
+- Tailwind CSS 4 (via `@tailwindcss/postcss`, no `tailwind.config.*`). Tokens, custom variants and section-specific classes live in `src/app/globals.css`. Home-page classes are prefixed `rb-` and sit in the "Home v2" block at the end of the file; everything above it serves `/projects`.
+- Home bands carry `data-tone="dark" | "light"` (and `data-fade` naming the tone of the band above, for the top gradient). The tone palettes in `globals.css` resolve per band, and `html[data-theme]` (`light` / `dark`, absent = mixed; set by the theme switcher, persisted in localStorage, applied pre-paint by the inline script in `layout.tsx`) forces every band to one tone. Components use the semantic tokens (`bg-canvas`, `bg-surface`, `border-line`, `text-ink`, `text-muted`, `text-accent`, `bg-topic`, …) and never take a theme prop.
+- Custom variants: `fine:` / `coarse:` (mouse vs touch). Extra breakpoints: `xs` 360px, `desk` 1440px, `3xl` 1920px. Layout tiers follow the design: phone < 768, tablet 768–1023, laptop 1024–1439, desktop ≥ 1440.
+- Rules in `globals.css` outside `@layer` beat Tailwind utilities, so don't put a utility on an element to override an `rb-` class property — change the class instead. `buttonClass()` takes display as its own argument for the same reason.
 - Path alias `@/*` maps to `src/*` (see `tsconfig.json`).
-- Fonts (Geist via `next/font/google`, plus DM Sans/Space Mono via Google Fonts import in `globals.css`) and the `<html>/<body>` shell live in `src/app/layout.tsx`.
+- Fonts and the `<html>/<body>` shell live in `src/app/layout.tsx`: Mona Sans (`font-display`) and Monaspace Neon (`font-code`, self-hosted from `@fontsource/monaspace-neon`) for the home page; Geist plus DM Sans/Space Mono (Google Fonts import in `globals.css`) for `/projects`.
+- The globe's land mask is the static `public/globe/land-dots.json`; regenerate it with `scripts/generate-globe-dots.mjs` (instructions in the file).

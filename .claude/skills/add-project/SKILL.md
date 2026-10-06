@@ -6,8 +6,14 @@ description: Add a new project entry to the portfolio's Projects section. Use wh
 # Add Project
 
 Adds a new entry to the `projects` array in `src/app/config/portfolio.ts`, which
-drives the Projects section (`ProjectCard` → `ProjectModal` → `MediaCarousel`).
+drives the `/projects` page (`ProjectCard` → `ProjectModal` → `MediaCarousel`)
+and the home page's project count and command palette.
 No other files need to change — the UI reads entirely from this config.
+
+The home page's "Pinned" band shows the six projects listed, in order, in
+`pinnedProjectIds` (same file). Only edit that list if the user wants the new
+project pinned on the home page — ask if it's unclear, since it pushes another
+project off.
 
 ## Inputs to gather from the user
 
@@ -61,8 +67,13 @@ Append to the `projects` array in `src/app/config/portfolio.ts`, matching the
     paper: "https://...",
   },
   highlight: "...",           // optional short badge, e.g. "In production", "Live demo available"
+  status: "In production",    // optional home-card label; omit to derive it
 },
 ```
+
+`status` is the label on the home page's pinned cards. Leave it out and it is
+derived (Research category → "Research", a `live` link → "Live demo"); set
+`"In production"` only for a real client/production site.
 
 Rules:
 - `id` must be a unique kebab-case slug not already used by another project.

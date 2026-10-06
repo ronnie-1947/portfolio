@@ -2,10 +2,56 @@ export const PROFILE_IMAGE = "/profile.JPG";
 export const LINKEDIN_URL = "https://www.linkedin.com/in/ripunjoy-buddha";
 export const GITHUB_URL = "https://github.com/ronnie-1947";
 export const RESUME_URL = "/Resume.pdf";
+export const EMAIL = "ripunjoy.buddha@gmail.com";
+export const GITHUB_HANDLE = "ronnie-1947";
+export const LINKEDIN_HANDLE = "ripunjoy-buddha";
 
-export const experiences = [
+/* ─── Profile (home Overview band) ──────────────────────────────────────── */
+
+export const profile = {
+  name: "Ripunjoy Buddha",
+  // Repo-style owner name used in the header and the README / contact "repos".
+  siteHandle: "ripunjoy-buddha",
+  // Cycled by the `$ whoami` terminal line.
+  roles: ["Full Stack Developer", "Cloud Architect", "AI Systems Builder", "Security Engineer"],
+  status: "Building Arkriti, launching soon",
+  bio: "5+ years crafting secure, scalable systems. From AI-powered healthcare applications to cloud-native architectures, I build software that's both powerful and protected.",
+  organization: "Arkriti",
+  location: "Ottawa, ON, Canada",
+  readme: {
+    greeting: "👋 Hi, I'm Ripunjoy, a software & security engineer in Ottawa.",
+    currentWork: {
+      name: "Arkriti",
+      summary: "an AI framework that assembles production-ready React interfaces from natural-language input. Public launch coming soon.",
+    },
+  },
+};
+
+export type Profile = typeof profile;
+
+/* ─── Experience ────────────────────────────────────────────────────────────
+ * Newest first. The home page renders this as a `git log --graph`: `hash` is
+ * the commit label, and `parallelTo` puts a role on a side branch that merges
+ * back beside the role it overlapped with (the entry right above it).
+ * ------------------------------------------------------------------------- */
+
+export type Experience = {
+  id: number;
+  hash: string;
+  role: string;
+  company: string;
+  employmentType?: string;
+  location: string;
+  period: string;
+  parallelTo?: string;
+  details: string[];
+  skills: string[];
+};
+
+export const experiences: Experience[] = [
   {
     id: 1,
+    hash: "e7a4c1f",
     role: "Founder & Principal Engineer",
     company: "Arkriti",
     employmentType: "Self-employed",
@@ -30,6 +76,7 @@ export const experiences = [
   },
   {
     id: 2,
+    hash: "9b2d6e0",
     role: "Senior Software & Security Engineer",
     company: "Avaros",
     location: "London, ON",
@@ -54,6 +101,7 @@ export const experiences = [
   },
   {
     id: 3,
+    hash: "4f8a3b2",
     role: "Founding Software Engineer",
     company: "Dice Health",
     location: "ON",
@@ -77,9 +125,11 @@ export const experiences = [
   },
   {
     id: 4,
+    hash: "c31e5d7",
     role: "Graduate Student Researcher",
     company: "University of Guelph",
     location: "Guelph, ON",
+    parallelTo: "Dice Health",
     period: "May 2024 – Aug 2024",
     details: [
       "Researched privacy-preserving machine learning under Prof. Rozita Dara, pairing federated learning with differential privacy so a shared model can be trained without ever pooling raw data",
@@ -98,6 +148,7 @@ export const experiences = [
   },
   {
     id: 5,
+    hash: "7d0b9a4",
     role: "Backend Developer",
     company: "Engaged Inc.",
     location: "Cambridge, ON",
@@ -118,6 +169,7 @@ export const experiences = [
   },
   {
     id: 6,
+    hash: "2e6f1c8",
     role: "Software Engineer",
     company: "PT Flokq Spaces",
     location: "Jakarta, Indonesia",
@@ -139,6 +191,7 @@ export const experiences = [
   },
   {
     id: 7,
+    hash: "b58c3e1",
     role: "Full Stack Developer & Team Lead",
     company: "Silpkala",
     location: "India",
@@ -159,9 +212,11 @@ export const experiences = [
   },
   {
     id: 8,
+    hash: "0a9d7f3",
     role: "Full Stack Engineer",
     company: "TVGuestpert Publishing",
     location: "USA",
+    parallelTo: "Silpkala",
     period: "Mar 2020 – Jan 2021",
     details: [
       "Sole designer and developer of tvguestpert.com — a production platform where TV guest experts showcase media appearances, sell their books, and manage paid memberships",
@@ -200,32 +255,114 @@ export const skills = {
   AI: ["OpenAI API", "Claude API", "AI Agents"],
 };
 
+export type SkillGroup = keyof typeof skills;
+
+/**
+ * The home Skills band shows each group as a "file" in a repo browser; the
+ * extension decides how the group is rendered as code (see lib/skillCode.ts).
+ */
+export const skillFiles: { name: string; group: SkillGroup }[] = [
+  { name: "core.md", group: "Core Expertise" },
+  { name: "frontend.tsx", group: "Frontend" },
+  { name: "backend.go", group: "Backend" },
+  { name: "databases.sql", group: "Databases" },
+  { name: "cloud.yaml", group: "Cloud/DevOps" },
+  { name: "security.sh", group: "Security" },
+  { name: "ai.py", group: "AI" },
+];
+
+/* ─── Career path (home globe) ──────────────────────────────────────────────
+ * Oldest first — the globe draws an arc from each stop to the next. Role,
+ * company and dates come from the linked `experiences` entry.
+ * ------------------------------------------------------------------------- */
+
+export const careerPath = [
+  { label: "USA", place: "USA", lat: 39.8, lon: -98.6, experienceId: 8 },
+  { label: "India", place: "India", lat: 22.6, lon: 79.0, experienceId: 7 },
+  { label: "Jakarta", place: "Jakarta, Indonesia", lat: -6.21, lon: 106.85, experienceId: 6 },
+  { label: "Cambridge", place: "Cambridge, ON", lat: 43.36, lon: -80.31, experienceId: 5 },
+  { label: "Guelph", place: "Guelph, ON", lat: 43.55, lon: -80.25, experienceId: 4 },
+  { label: "London", place: "London, ON", lat: 42.98, lon: -81.25, experienceId: 2 },
+  { label: "Ottawa", place: "Ottawa, ON", lat: 45.42, lon: -75.7, experienceId: 1 },
+];
+
 export const primaryEducation = {
   university: "University of Guelph",
   degree: "Master of Cybersecurity & Threat Intelligence",
+  summary:
+    "Graduate program focused on advanced cybersecurity principles, threat intelligence analysis, and secure system design.",
   year: "2023 – 2024",
   location: "Guelph, Ontario, Canada",
   logo: "/university/guelph-logo.png",
+  // `focus` is the object-position that keeps faces in frame when a tile crops.
   collageImages: [
-    { src: "/university/collage-1.png", alt: "Campus life" },
-    { src: "/university/collage-2.jpeg", alt: "Graduation" },
-    { src: "/university/collage-5.jpg", alt: "University event" },
-    { src: "/university/collage-3.jpeg", alt: "University campus" },
-    { src: "/university/collage-4.jpeg", alt: "Student life" },
+    { src: "/university/collage-1.png", alt: "Campus life", width: 870, height: 450, focus: "50% 40%" },
+    { src: "/university/collage-2.jpeg", alt: "Graduation", width: 1440, height: 1800, focus: "50% 28%" },
+    { src: "/university/collage-5.jpg", alt: "University event", width: 1152, height: 2048, focus: "50% 30%" },
+    { src: "/university/collage-3.jpeg", alt: "University campus", width: 1440, height: 1800, focus: "50% 50%" },
+    { src: "/university/collage-4.jpeg", alt: "Student life", width: 1440, height: 1800, focus: "50% 30%" },
   ],
 };
 
-export const otherEducation = [
+/**
+ * Other degrees and certifications, shown as flip badges. The badge grid lays
+ * out exactly one "degree" followed by two "certification" entries.
+ */
+export type Credential = {
+  id: string;
+  group: "degree" | "certification";
+  title: string;
+  short: string; // badge face label
+  issuer: string;
+  years: string;
+  kind: string;
+  meta: string; // caption under the badge
+  emblem: "mortar-board" | "shield-check" | "globe";
+  accent: "green" | "amber" | "blue";
+};
+
+export const credentials: Credential[] = [
   {
-    degree: "Cyber Security PG Certificate",
-    school: "Durham College",
-    year: "2023",
+    id: "pg-cert",
+    group: "degree",
+    title: "Cyber Security PG Certificate",
+    short: "PG CERT",
+    issuer: "Durham College",
+    years: "2023",
+    kind: "Postgraduate",
+    meta: "Durham College · 2023",
+    emblem: "mortar-board",
+    accent: "green",
+  },
+  {
+    id: "security-plus",
+    group: "certification",
+    title: "CompTIA Security+ ce",
+    short: "SEC+",
+    issuer: "CompTIA",
+    years: "2022 – 2025",
+    kind: "Certification",
+    meta: "2022–2025",
+    emblem: "shield-check",
+    accent: "amber",
+  },
+  {
+    id: "ccna",
+    group: "certification",
+    title: "CCNA",
+    short: "CCNA",
+    issuer: "Cisco",
+    years: "2022 – 2025",
+    kind: "Certification",
+    meta: "2022–2025",
+    emblem: "globe",
+    accent: "blue",
   },
 ];
 
-export const certifications = [
-  { name: "CompTIA Security+ ce", period: "2022–2025" },
-  { name: "CCNA", period: "2022–2025" },
+export const organizations: { name: string; logo?: string; monogram?: string }[] = [
+  { name: "University of Guelph", logo: "/university/guelph-logo.png" },
+  { name: "Durham College", monogram: "DC" },
 ];
 
 /* ─── Projects ───────────────────────────────────────────────────────────────
@@ -258,7 +395,18 @@ export type Project = {
   tech: string[]; // tag chips
   links: ProjectLinks;
   highlight?: string; // optional metric/badge
+  // Status label on home cards. Omit to derive it: Research category → "Research",
+  // a live link → "Live demo". Set "In production" for real client/production sites.
+  status?: ProjectStatus;
 };
+
+export type ProjectStatus = "Live demo" | "In production" | "Research";
+
+export function projectStatus(project: Project): ProjectStatus {
+  if (project.status) return project.status;
+  if (project.category === "Research") return "Research";
+  return project.links.live ? "Live demo" : "Research";
+}
 
 export const projects: Project[] = [
   {
@@ -369,6 +517,7 @@ export const projects: Project[] = [
     id: "tvguestpert",
     title: "TVGuestpert",
     category: "Full-Stack",
+    status: "In production",
     tagline:
       "Full-stack platform where TV guest experts showcase media appearances, sell their books, and manage paid memberships — live in production.",
     description: [
@@ -426,6 +575,7 @@ export const projects: Project[] = [
     id: "happy-haul",
     title: "HappyHaul",
     category: "Frontend",
+    status: "In production",
     tagline:
       "Marketing site for an Ottawa moving company, built to load instantly and convert visitors into booked jobs.",
     description: [
@@ -700,4 +850,14 @@ export const projects: Project[] = [
     },
     highlight: "Web-readable paper",
   },
+];
+
+// Home "Pinned" band, in order. The first one is the featured card on wide screens.
+export const pinnedProjectIds = [
+  "clinic-scribe",
+  "tvguestpert",
+  "spotify-clone",
+  "happy-haul",
+  "blockchain-iam",
+  "federated-learning-dp",
 ];

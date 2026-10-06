@@ -1,69 +1,63 @@
-import ExperienceSection from "./components/ExperienceSection";
 import Navbar from "./components/Navbar";
-import HeroSection from "./components/HeroSection";
+import SiteHeader from "./components/SiteHeader";
+import OverviewSection from "./components/OverviewSection";
+import ExperienceSection from "./components/ExperienceSection";
+import PinnedSection from "./components/PinnedSection";
+import SkillsSection from "./components/SkillsSection";
 import EducationSection from "./components/EducationSection";
 import ContactSection from "./components/ContactSection";
+import SiteFooter from "./components/SiteFooter";
+import type { CareerStop } from "./components/client/CareerGlobe";
 import {
-  PROFILE_IMAGE,
+  careerPath,
+  credentials,
   experiences,
-  skills,
+  organizations,
+  pinnedProjectIds,
   primaryEducation,
-  otherEducation,
-  certifications,
+  profile,
   projects,
+  skillFiles,
+  skills,
+  type Project,
 } from "./config/portfolio";
-import SkillsSection from "./components/SkillsSection";
-import FeaturedProjectsSection from "./components/FeaturedProjectsSection";
 
-// Home only teases the top projects; the rest live on /projects.
-const FEATURED_PROJECT_COUNT = 4;
-
+// Home v2 (GitHub-profile redesign). Previous version lives on branch `archive/home-v1` (tag `home-v1`).
 export default function Portfolio() {
+  const pinned = pinnedProjectIds.map((id) => projects.find((p) => p.id === id)).filter((p): p is Project => !!p);
+  const unpinned = projects.filter((p) => !pinnedProjectIds.includes(p.id));
+
+  const stops: CareerStop[] = careerPath.map(({ experienceId, ...stop }) => {
+    const role = experiences.find((e) => e.id === experienceId);
+    return { ...stop, company: role?.company ?? "", role: role?.role ?? "", date: role?.period ?? "" };
+  });
+
   return (
-    <div className="min-h-screen bg-[#080c18] text-gray-100 overflow-x-hidden font-sans">
-      {/* Gradient orbs */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 -left-32 w-96 h-96 bg-cyan-600/15 rounded-full blur-[7.5rem]" />
-        <div className="absolute bottom-1/4 -right-32 w-96 h-96 bg-indigo-600/15 rounded-full blur-[7.5rem]" />
-        <div className="absolute top-3/4 left-1/3 w-64 h-64 bg-purple-600/10 rounded-full blur-[6.25rem]" />
+    <div className="rb-home">
+      {/* Same side nav as /projects; hidden on short viewports (see .rb-side-nav). */}
+      <div className="rb-side-nav">
+        <Navbar mobileNav={false} />
       </div>
-
-      <Navbar />
-      <HeroSection profileImage={PROFILE_IMAGE} />
-
-      {/* Experience Section */}
-      <section
-        id="experience"
-        className="bg-white min-h-screen relative pt-14 md:pt-20 2xl:pt-28 pb-8 md:pb-12 px-6 md:px-10 2xl:px-16 z-10"
-      >
-        <div className="max-w-7xl 2xl:max-w-360 mx-auto">
-          <div className="mb-12 md:mb-16 2xl:mb-20 animate-fade-in-up">
-            <p className="font-mono text-xs md:text-sm 2xl:text-base text-indigo-500 tracking-wider uppercase mb-2">
-              Career Journey
-            </p>
-            <h2 className="text-3xl md:text-4xl lg:text-5xl 2xl:text-6xl font-bold text-gray-900">
-              Experience
-            </h2>
-          </div>
-          <ExperienceSection experiences={experiences} theme="light" />
-        </div>
-      </section>
-
-      {/* Projects teaser — same white block as Experience, wave into Skills */}
-      <FeaturedProjectsSection
-        projects={projects.slice(0, FEATURED_PROJECT_COUNT)}
-        totalCount={projects.length}
+      <SiteHeader
+        handle={profile.siteHandle}
+        counts={{ experience: experiences.length, projects: projects.length, education: 1 + credentials.length }}
+        projects={[...pinned, ...unpinned]}
       />
-
-      <SkillsSection skills={skills} />
-
-      {/* Education & Certifications */}
-      <EducationSection
-        primary={primaryEducation}
-        other={otherEducation}
-        certifications={certifications}
-      />
-      <ContactSection />
+      <main>
+        <OverviewSection
+          profile={profile}
+          stops={stops}
+          coreSkills={skills["Core Expertise"]}
+          degree={primaryEducation.degree}
+          university={primaryEducation.university}
+        />
+        <ExperienceSection experiences={experiences} />
+        <PinnedSection pinned={pinned} totalCount={projects.length} />
+        <SkillsSection skills={skills} files={skillFiles} />
+        <EducationSection education={primaryEducation} credentials={credentials} organizations={organizations} />
+        <ContactSection owner={profile.siteHandle} remote={profile.name.split(" ")[0].toLowerCase()} />
+      </main>
+      <SiteFooter name={profile.name} />
     </div>
   );
 }
