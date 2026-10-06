@@ -28,7 +28,7 @@ export default function ExperienceSection({ experiences }: { experiences: Experi
       className="rb-band-fade rb-band-pad relative text-ink"
     >
       <Container>
-        <div className="mx-auto max-w-[1100px]">
+        <div className="mx-auto max-w-275">
           <CommitGraph heading={<SectionHeading anchor="experience" title="Experience" command="git log --graph career" prompt />} commits={commits} />
         </div>
       </Container>

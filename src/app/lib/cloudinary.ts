@@ -18,29 +18,43 @@ function withTransform(url: string, chain: string): string {
  * aspect ratio (keeping the top chrome) so the app UI reaches the frame edges.
  *
  * The trim runs on the *original* upload, which for these screenshots can be a
- * multi-megabyte PNG, so `w_`/`f_auto`/`q_auto` are essential — without them
- * Cloudinary returns the full-resolution PNG and a cold transform can take
- * upwards of ten seconds.
+ * multi-megabyte PNG, so `w_`/`q_auto` are essential — without them Cloudinary
+ * returns the full-resolution PNG and a cold transform can take upwards of ten
+ * seconds.
+ *
+ * `f_webp` rather than `f_auto`: `f_auto` makes Cloudinary vary the response on
+ * `Accept` and `User-Agent`, so iOS Safari, Android and desktop each warm their
+ * own copy and a phone visitor often pays for a cold transform a desktop
+ * visitor already triggered. Every supported browser decodes WebP, so one
+ * format means one cached derivative per image for everyone.
  */
 function fillChain(aspectRatio: string, width: number): string {
-  return `e_trim:10/c_fill,ar_${aspectRatio},g_north,w_${width},f_auto,q_auto:good`;
+  return `e_trim:10/c_fill,ar_${aspectRatio},g_north,w_${width},f_webp,q_auto:good`;
 }
 
 /**
- * Build a `next/image` loader for a fixed aspect ratio. Using a loader (rather
- * than pre-transforming `src`) keeps the request on Cloudinary's CDN instead of
- * routing it through Next's own optimizer, which would re-download the
- * multi-megabyte original once per width variant before re-encoding it.
+ * Build a `next/image` loader for a fixed aspect ratio and a single output
+ * width. Using a loader (rather than pre-transforming `src`) keeps the request
+ * on Cloudinary's CDN instead of routing it through Next's own optimizer, which
+ * would re-download the multi-megabyte original once per width variant before
+ * re-encoding it.
+ *
+ * The width `next/image` asks for is deliberately ignored. The browser picks a
+ * srcset candidate by CSS width × device pixel ratio, so a 343px card on a 3x
+ * phone asked for w_1200 while a desktop card asked for w_640/w_1080 — every
+ * width is another derivative Cloudinary builds from the original on first
+ * request. One width per frame type means every device shares the same, already
+ * warm, derivative.
  *
  * Pass the raw delivery URL as `src`; the loader adds the transform chain.
  */
-export function cloudinaryLoader(aspectRatio: string): ImageLoader {
-  return ({ src, width }) => withTransform(src, fillChain(aspectRatio, width));
+export function cloudinaryLoader(aspectRatio: string, width: number): ImageLoader {
+  return ({ src }) => withTransform(src, fillChain(aspectRatio, width));
 }
 
-export const coverLoader = cloudinaryLoader("16:10"); // project cards
-export const slideLoader = cloudinaryLoader("16:9"); // modal carousel + hero
-export const thumbLoader = cloudinaryLoader("4:3"); // featured strip thumbnails
+export const coverLoader = cloudinaryLoader("16:10", 800); // project cards (≤480px wide)
+export const slideLoader = cloudinaryLoader("16:9", 1200); // modal carousel + hero (≤768px wide)
+export const thumbLoader = cloudinaryLoader("4:3", 640); // featured strip thumbnails
 
 /**
  * A ~300-byte, 16px-wide version of the same crop, used as a CSS background

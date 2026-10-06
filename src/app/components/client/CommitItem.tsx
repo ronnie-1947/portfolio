@@ -12,7 +12,7 @@ export type CommitView = {
   location: string;
   period: string;
   badge?: string;
-  // Side-branch role (tablet up draws it on a second lane) and the role it ran beside.
+  // Side-branch role (drawn on a second lane) and the role it ran beside.
   branch: boolean;
   parallelTo?: string;
   // The entry right above a side branch, where that branch forks off.
@@ -35,6 +35,8 @@ type CommitItemProps = {
 // Phones show four tags and a "+N" toggle under the header; wider screens show them all inside it.
 const PHONE_TAG_LIMIT = 4;
 const LANE_LINE = "absolute w-0.5 rounded-[1px]";
+// Side-branch lane x: centred at 30px on phones, 36px from tablet up.
+const BRANCH_LANE = "left-[29px] md:left-[35px]";
 
 /** One role in the `git log --graph`: graph lanes on the left, an expandable "diff" card on the right. */
 export default function CommitItem({ commit: c, head, first, last, open, tagsOpen, onToggle, onToggleTags }: CommitItemProps) {
@@ -43,34 +45,31 @@ export default function CommitItem({ commit: c, head, first, last, open, tagsOpe
   const diffId = `diff-${c.id}`;
 
   return (
-    <li className={`relative pl-7 md:pl-14 ${last ? "" : "pb-4"}`}>
-      {/* Phone: a single lane. */}
-      <span
-        aria-hidden="true"
-        className={`rb-graph-main ${LANE_LINE} left-[11px] md:hidden ${first ? "top-[30px]" : "top-0"} ${last ? "h-[30px]" : "bottom-0"}`}
-      />
-      {/* Tablet up: main lane, plus the side branch forking off and merging back. */}
-      <span aria-hidden="true" className={`rb-graph-main ${LANE_LINE} bottom-0 left-[11px] hidden md:block ${first ? "top-[30px]" : "top-0"}`} />
+    <li className={`relative pl-10 md:pl-14 ${last ? "" : "pb-4"}`}>
+      {/* Main lane, plus the side branch forking off and merging back (tighter lane spacing on phones). */}
+      <span aria-hidden="true" className={`rb-graph-main ${LANE_LINE} bottom-0 left-[11px] ${first ? "top-[30px]" : "top-0"}`} />
       {c.forksBranch && (
         <>
-          <svg aria-hidden="true" width="56" height="24" viewBox="0 0 56 24" className="absolute top-0 left-0 hidden md:block">
-            <path d="M12 0 C12 14 36 10 36 24" fill="none" strokeWidth="2" className="stroke-done" />
+          <svg aria-hidden="true" width="56" height="24" viewBox="0 0 56 24" className="absolute top-0 left-0">
+            <path d="M12 0 C12 14 30 10 30 24" fill="none" strokeWidth="2" className="stroke-done md:hidden" />
+            <path d="M12 0 C12 14 36 10 36 24" fill="none" strokeWidth="2" className="stroke-done max-md:hidden" />
           </svg>
-          <span aria-hidden="true" className={`${LANE_LINE} top-6 bottom-0 left-[35px] hidden bg-done md:block`} />
+          <span aria-hidden="true" className={`${LANE_LINE} ${BRANCH_LANE} top-6 bottom-0 bg-done`} />
         </>
       )}
       {c.branch && (
         <>
-          <span aria-hidden="true" className={`${LANE_LINE} top-0 bottom-6 left-[35px] hidden bg-done md:block`} />
-          <svg aria-hidden="true" width="56" height="24" viewBox="0 0 56 24" className="absolute bottom-0 left-0 hidden md:block">
-            <path d="M36 0 C36 14 12 10 12 24" fill="none" strokeWidth="2" className="stroke-done" />
+          <span aria-hidden="true" className={`${LANE_LINE} ${BRANCH_LANE} top-0 bottom-6 bg-done`} />
+          <svg aria-hidden="true" width="56" height="24" viewBox="0 0 56 24" className="absolute bottom-0 left-0">
+            <path d="M30 0 C30 14 12 10 12 24" fill="none" strokeWidth="2" className="stroke-done md:hidden" />
+            <path d="M36 0 C36 14 12 10 12 24" fill="none" strokeWidth="2" className="stroke-done max-md:hidden" />
           </svg>
         </>
       )}
       {last && (
         <span
           aria-hidden="true"
-          className="absolute -bottom-[5px] left-[7px] hidden size-2.5 rounded-full border-2 border-[color-mix(in_srgb,var(--rb-ac)_55%,transparent)] bg-canvas md:block"
+          className="absolute -bottom-[5px] left-[7px] size-2.5 rounded-full border-2 border-[color-mix(in_srgb,var(--rb-ac)_55%,transparent)] bg-canvas"
         />
       )}
       <span
@@ -79,7 +78,7 @@ export default function CommitItem({ commit: c, head, first, last, open, tagsOpe
         className={`rb-graph-node absolute z-3 rounded-full border-2 ${
           head
             ? "rb-graph-head top-5 left-1 size-4 border-accent bg-accent"
-            : `top-[22px] left-1.5 size-3 bg-canvas ${c.branch ? "border-done md:left-[30px]" : "border-accent"}`
+            : `top-[22px] size-3 bg-canvas ${c.branch ? "border-done left-6 md:left-[30px]" : "border-accent left-1.5"}`
         }`}
       />
 
