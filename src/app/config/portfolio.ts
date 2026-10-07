@@ -19,7 +19,8 @@ export const profile = {
   organization: "Arkriti",
   location: "Ottawa, ON, Canada",
   readme: {
-    greeting: "👋 Hi, I'm Ripunjoy, a software & security engineer in Ottawa.",
+    greeting: "👋 Hi, I'm Ripunjoy, a software developer & security engineer based in Canada.",
+    reach: "Working remotely with teams across Canada, the US, the UK and Europe",
     currentWork: {
       name: "Arkriti",
       summary: "an AI framework that assembles production-ready React interfaces from natural-language input. Public launch coming soon.",

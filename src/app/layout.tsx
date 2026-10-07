@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Mona_Sans } from "next/font/google";
 import localFont from "next/font/local";
+import { SITE_DESCRIPTION, SITE_NAME, SITE_TITLE, SITE_URL } from "./config/site";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -30,9 +31,31 @@ const monaspace = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Ripunjoy Buddha | Portfolio",
-  description:
-    "Portfolio of Ripunjoy Buddha, Senior Software & Security Engineer — experience, projects, skills, and education.",
+  metadataBase: new URL(SITE_URL),
+  title: { default: SITE_TITLE, template: `%s · ${SITE_NAME}` },
+  description: SITE_DESCRIPTION,
+  applicationName: SITE_NAME,
+  authors: [{ name: SITE_NAME, url: SITE_URL }],
+  creator: SITE_NAME,
+  alternates: { canonical: "/" },
+  // Pages that set their own `openGraph` replace this object, so they restate
+  // title/description/url; the image still comes from app/opengraph-image.tsx.
+  openGraph: {
+    type: "profile",
+    firstName: "Ripunjoy",
+    lastName: "Buddha",
+    siteName: SITE_NAME,
+    locale: "en_US",
+    url: "/",
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
+  },
+  twitter: { card: "summary_large_image", title: SITE_TITLE, description: SITE_DESCRIPTION },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1, "max-video-preview": -1 },
+  },
   manifest: "/manifest.json",
   icons: {
     icon: [

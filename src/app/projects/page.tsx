@@ -2,11 +2,25 @@ import type { Metadata } from "next";
 import Navbar from "../components/Navbar";
 import ProjectsSection from "../components/ProjectsSection";
 import { projects } from "../config/portfolio";
+import { SITE_NAME } from "../config/site";
+
+const DESCRIPTION =
+  "Selected work by Ripunjoy Buddha, software developer and security engineer — full-stack products, AI tools, secure backend systems and cybersecurity research.";
 
 export const metadata: Metadata = {
-  title: "Projects — Ripunjoy Buddha",
-  description:
-    "Selected work by Ripunjoy Buddha — full-stack products, secure backend systems and cybersecurity research.",
+  title: "Projects",
+  description: DESCRIPTION,
+  alternates: { canonical: "/projects" },
+  // Replaces the root openGraph object, so restate the shared fields.
+  openGraph: {
+    type: "website",
+    siteName: SITE_NAME,
+    locale: "en_US",
+    url: "/projects",
+    title: `Projects · ${SITE_NAME}`,
+    description: DESCRIPTION,
+  },
+  twitter: { card: "summary_large_image", title: `Projects · ${SITE_NAME}`, description: DESCRIPTION },
 };
 
 export default function ProjectsPage() {

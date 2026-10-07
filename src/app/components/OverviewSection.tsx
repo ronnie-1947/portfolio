@@ -48,6 +48,7 @@ export default function OverviewSection({ profile, stops, coreSkills, degree, un
         <ReadmeCard
           owner={profile.siteHandle}
           greeting={profile.readme.greeting}
+          reach={profile.readme.reach}
           currentWork={profile.readme.currentWork}
           coreSkills={coreSkills}
           degree={degree}

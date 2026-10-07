@@ -7,6 +7,7 @@ import SkillsSection from "./components/SkillsSection";
 import EducationSection from "./components/EducationSection";
 import ContactSection from "./components/ContactSection";
 import SiteFooter from "./components/SiteFooter";
+import PersonJsonLd from "./components/PersonJsonLd";
 import type { CareerStop } from "./components/client/CareerGlobe";
 import {
   careerPath,
@@ -34,6 +35,7 @@ export default function Portfolio() {
 
   return (
     <div className="rb-home">
+      <PersonJsonLd />
       {/* Same side nav as /projects; hidden on short viewports (see .rb-side-nav). */}
       <div className="rb-side-nav">
         <Navbar mobileNav={false} />

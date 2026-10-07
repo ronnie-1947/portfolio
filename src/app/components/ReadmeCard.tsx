@@ -4,6 +4,7 @@ import Reveal from "./client/Reveal";
 type ReadmeCardProps = {
   owner: string;
   greeting: string;
+  reach: string;
   currentWork: { name: string; summary: string };
   coreSkills: string[];
   degree: string;
@@ -12,7 +13,7 @@ type ReadmeCardProps = {
 };
 
 // GitHub-profile-style README closing the Overview band.
-export default function ReadmeCard({ owner, greeting, currentWork, coreSkills, degree, university, email }: ReadmeCardProps) {
+export default function ReadmeCard({ owner, greeting, reach, currentWork, coreSkills, degree, university, email }: ReadmeCardProps) {
   return (
     <Reveal className="mt-[clamp(40px,6vw,80px)]">
       <article className="rounded-md border border-line bg-canvas">
@@ -33,6 +34,7 @@ export default function ReadmeCard({ owner, greeting, currentWork, coreSkills, d
               <li>
                 🔭 Currently building <strong>{currentWork.name}</strong>: {currentWork.summary}
               </li>
+              <li>🌍 {reach}</li>
               <li>🛡️ Core: {coreSkills.join(" · ")}</li>
               <li>
                 🎓 {degree}, {university}
