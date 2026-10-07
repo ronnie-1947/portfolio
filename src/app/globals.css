@@ -755,7 +755,6 @@ body:has(.rb-home) { background: #0d1117; }
   -webkit-text-fill-color: transparent;
   color: transparent;
 }
-.rb-brand-tile { background: linear-gradient(135deg, #a371f7 0%, #2f81f7 55%, #56d4dd 100%); }
 .rb-no-scrollbar { scrollbar-width: none; }
 .rb-no-scrollbar::-webkit-scrollbar { display: none; }
 .rb-edge-mask {
