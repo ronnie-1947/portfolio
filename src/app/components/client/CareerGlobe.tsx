@@ -60,7 +60,7 @@ export default function CareerGlobe({ stops }: { stops: CareerStop[] }) {
           className="pointer-events-none absolute top-0 left-0 z-3 opacity-0 transition-opacity duration-200 ease-out"
         >
           {pinned && (
-            <div className="w-[232px] rounded-md border border-line bg-surface px-3 py-2.5 text-[13px] leading-[1.45] shadow-overlay">
+            <div className="w-58 rounded-md border border-line bg-surface px-3 py-2.5 text-[13px] leading-[1.45] shadow-overlay">
               <div className="font-code text-[11px] text-muted">{pinned.place}</div>
               <div className="font-semibold text-ink">{pinned.company}</div>
               <div className="text-ink">{pinned.role}</div>

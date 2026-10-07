@@ -48,7 +48,7 @@ export default function BranchMenu() {
           >
             <GoCheck aria-hidden="true" className="size-4 flex-none text-accent" />
             <span className="flex-1 font-code text-[13px]">main</span>
-            <span className="rounded-full border border-line px-[7px] text-[11px] leading-[18px] text-muted">default</span>
+            <span className="rounded-full border border-line px-1.75 text-[11px] leading-4.5 text-muted">default</span>
           </button>
         </div>
       )}
