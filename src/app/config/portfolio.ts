@@ -382,7 +382,7 @@ export type ProjectMedia =
 export type ProjectLinks = {
   live?: string; // running site
   github?: string; // code reference (some projects are repo-only: github set, live omitted)
-  paper?: string; // external URL — GitHub blob URL or raw.githubusercontent.com
+  paper?: string; // report page — a site path like "/projects/x.html" (listed in the sitemap) or an external URL
 };
 
 export type Project = {
