@@ -35,6 +35,10 @@ const R2D = 180 / Math.PI;
 const ARC_MS = 1500;
 const GAP_MS = 320;
 const STEP_MS = ARC_MS + GAP_MS;
+// Touch devices whose frames take longer than this to draw drop to a still frame.
+const SLOW_FRAME_MS = 12;
+const COST_WARMUP = 5;
+const COST_SAMPLES = 30;
 const TOUR_COLORS = [
   [163, 113, 247],
   [47, 129, 247],
@@ -98,16 +102,18 @@ function tourColor(t: number) {
   return TOUR_COLORS[i].map((v, k) => Math.round(v + (TOUR_COLORS[i + 1][k] - v) * f)).join(",");
 }
 
+const isCoarse = () => !window.matchMedia(FINE_POINTER_QUERY).matches;
+
 /**
- * On touch devices that are short on room or power (phone landscape, low core
- * count, data saver) the globe renders one still frame instead of animating.
+ * On touch devices that are short on room or data (phone landscape, data saver)
+ * the globe renders a still frame instead of animating; it still redraws while
+ * dragged. Slow devices are caught by measuring frame cost instead (core counts
+ * are unreliable: iOS Safari always reports 2).
  */
 function shouldRenderStill() {
-  const coarse = !window.matchMedia(FINE_POINTER_QUERY).matches;
   const landscape = window.innerWidth > window.innerHeight && window.innerHeight < 500;
   const nav = navigator as Navigator & { connection?: { saveData?: boolean } };
-  const lowEnd = (!!nav.hardwareConcurrency && nav.hardwareConcurrency <= 4 && window.innerWidth < 768) || !!nav.connection?.saveData;
-  return coarse && (landscape || lowEnd);
+  return isCoarse() && (landscape || !!nav.connection?.saveData);
 }
 
 const angleDelta = (target: number, current: number) => ((target - current + 540) % 360) - 180;
@@ -147,6 +153,8 @@ export function createCareerGlobe(
     reached: -1,
     screen: [] as ScreenPoint[],
     still: shouldRenderStill(),
+    slow: false,
+    cost: { n: 0, total: 0 },
     drawn: false,
     raf: 0,
     destroyed: false,
@@ -397,12 +405,30 @@ export function createCareerGlobe(
     }
   };
 
+  // Average the draw time of the first animated frames once land is in; too slow → still mode.
+  const coarse = isCoarse();
+  const sampleCost = (ms: number) => {
+    if (!coarse || reduced || !g.dots || g.cost.n >= COST_WARMUP + COST_SAMPLES) return;
+    if (++g.cost.n <= COST_WARMUP) return;
+    g.cost.total += ms;
+    if (g.cost.n === COST_WARMUP + COST_SAMPLES && g.cost.total / COST_SAMPLES > SLOW_FRAME_MS) {
+      g.slow = true;
+      g.still = true;
+      g.tourT = 1e9;
+    }
+  };
+
   const loop = (now: number) => {
     g.raf = requestAnimationFrame(loop);
     if (!g.visible) return;
     if (g.still && g.drawn) return;
+    const t0 = performance.now();
     frame(now);
-    if (g.still && g.dots) g.drawn = true;
+    if (g.still) {
+      if (g.dots) g.drawn = true;
+    } else {
+      sampleCost(performance.now() - t0);
+    }
   };
   const redraw = () => {
     g.drawn = false;
@@ -423,7 +449,7 @@ export function createCareerGlobe(
   visibilityObserver.observe(wrap);
 
   const onWindowResize = () => {
-    const still = shouldRenderStill();
+    const still = g.slow || shouldRenderStill();
     if (still !== g.still) {
       g.still = still;
       if (still) g.tourT = 1e9;
@@ -463,11 +489,8 @@ export function createCareerGlobe(
     });
     return best;
   };
-  const idleCursor = () => (g.still ? "default" : "grab");
-
   const onDown = (e: PointerEvent) => {
     g.down = { x: e.clientX, y: e.clientY };
-    if (g.still) return;
     g.drag = { x: e.clientX, y: e.clientY };
     g.vx = g.vy = 0;
     g.focus = null;
@@ -490,6 +513,7 @@ export function createCareerGlobe(
       g.vx = -dx * k;
       g.vy = dy * k * 0.5;
       g.idle = performance.now() + 2500;
+      g.drawn = false;
       return;
     }
     if (e.pointerType !== "mouse" || g.sticky) return;
@@ -499,13 +523,13 @@ export function createCareerGlobe(
       g.drawn = false;
       setPin(best);
     }
-    canvas.style.cursor = best >= 0 ? "pointer" : idleCursor();
+    canvas.style.cursor = best >= 0 ? "pointer" : "grab";
   };
   const onUp = (e: PointerEvent) => {
     const start = g.down;
     g.down = null;
     g.drag = null;
-    canvas.style.cursor = idleCursor();
+    canvas.style.cursor = "grab";
     // A tap (barely moved) toggles the nearest pin; touch gets a bigger target.
     if (start && Math.hypot(e.clientX - start.x, e.clientY - start.y) < 6) {
       const i = hitPin(e, e.pointerType === "mouse" ? 14 : 24);
@@ -538,7 +562,7 @@ export function createCareerGlobe(
   canvas.addEventListener("pointerup", onUp);
   canvas.addEventListener("pointercancel", onCancel);
   canvas.addEventListener("pointerleave", onLeave);
-  canvas.style.cursor = idleCursor();
+  canvas.style.cursor = "grab";
 
   g.raf = requestAnimationFrame(loop);
 
